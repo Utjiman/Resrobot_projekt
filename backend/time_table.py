@@ -31,7 +31,7 @@ class TimeTable:
 
     
     
-    def show_time_to_departure(self, stop_id: int):
+    def show_time_to_departure(self, stop_id: int, limit: int = 20):
        
         data = self.resrobot.timetable_departure(location_id=stop_id)
         departures = data.get("Departure", [])
@@ -61,7 +61,7 @@ class TimeTable:
                     "Tid kvar (min)": time_remaining,
                 })
 
-        return sorted(result, key=lambda x: x["Tid kvar (min)"])
+        return sorted(result, key=lambda x: x["Tid kvar (min)"])[:limit]
 
 
     
