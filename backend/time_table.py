@@ -66,7 +66,7 @@ class TimeTable:
 
     
     
-    def show_one_hour_aheade(self, stop_id: int):
+    def show_one_hour_ahead(self, stop_id: int):
        
         data = self.resrobot.timetable_departure(location_id=stop_id)
         departures = data.get("Departure", [])
