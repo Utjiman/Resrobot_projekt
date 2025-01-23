@@ -66,7 +66,32 @@ class TimeTable:
 
     
     
-    
-    
-    def show_one_hour_ahead():
-        pass
+    def show_one_hour_ahead(self, stop_id: int):
+       
+        data = self.resrobot.timetable_departure(location_id=stop_id)
+        departures = data.get("Departure", [])
+
+        now = datetime.now()
+        result = []
+
+        for departure in departures:
+            line = departure.get("ProductAtStop", {}).get("name", "Okänd linje")
+            direction = departure.get("direction", "Okänd destination")
+            departure_time_str = departure.get("time", None)
+
+            if not departure_time_str:
+                continue
+
+            departure_time = datetime.strptime(departure_time_str, "%H:%M:%S").replace(
+                year=now.year, month=now.month, day=now.day
+            )
+
+            time_remaining = int((departure_time - now).total_seconds() // 60)
+            if time_remaining >= 0:
+                result.append({
+                    "Linje": line,
+                    "Destination": direction,
+                    "Tid kvar (min)": time_remaining,
+                })
+
+        return sorted(result, key=lambda x: x["Tid kvar (min)"])

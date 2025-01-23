@@ -8,7 +8,7 @@ def main():
     
     stop_id = 740000002
 
-    
+    # result = timetable.show_one_hour_ahead(stop_id) remove comment and comment out show_time_to_departure to test instead.
     result = timetable.show_time_to_departure(stop_id)
 
     if not result:
