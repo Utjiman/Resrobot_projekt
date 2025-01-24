@@ -1,12 +1,14 @@
-import pandas as pd
 from datetime import datetime
+
+import pandas as pd
 import requests
 
 from backend.connect_to_api import ResRobot
 
+
 class ResRobotDay:
     """
-    Hämtar dagens avgångar och ankomster från midnatt till nu, 
+    Hämtar dagens avgångar och ankomster från midnatt till nu,
     API:et sparar bara data några timmar tillbaka så man får inte
     data för mer än 5-6 timmar bakåt i tiden.
     """
@@ -33,9 +35,9 @@ class ResRobotDay:
             "id": station_id,
             "format": "json",
             "accessId": self.API_KEY,
-            "date": date_str,          # dagens datum
-            "time": "00:00",           # från midnatt
-            "duration": minutes_since_midnight
+            "date": date_str,  # dagens datum
+            "time": "00:00",  # från midnatt
+            "duration": minutes_since_midnight,
         }
         try:
             resp = requests.get(url, params=params)
@@ -64,7 +66,7 @@ class ResRobotDay:
             "accessId": self.API_KEY,
             "date": date_str,
             "time": "00:00",
-            "duration": minutes_since_midnight
+            "duration": minutes_since_midnight,
         }
         try:
             resp = requests.get(url, params=params)
@@ -75,5 +77,3 @@ class ResRobotDay:
         except requests.exceptions.RequestException as err:
             print(f"HTTP-fel vid hämtning av ankomster: {err}")
             return pd.DataFrame()
-        
-

@@ -1,5 +1,6 @@
 import streamlit as st
 from plot_maps import TripMap
+
 from utils.constants import StationIds
 
 trip_map = TripMap(

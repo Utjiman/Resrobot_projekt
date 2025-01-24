@@ -1,5 +1,6 @@
-from backend.connect_to_api import ResRobot
 import pandas as pd
+
+from backend.connect_to_api import ResRobot
 
 resrobot = ResRobot()
 
@@ -63,10 +64,3 @@ class TripPlanner:
         It returns a list of DataFrame objects, where each item corresponds to a trip
         """
         # TODO: implement this method
-
-
-if __name__ == "__main__":
-    data = TripData(
-        740000190,
-    )
-    print(data.next_available_trip()[["arrTime", "depTime", "time", "date"]])

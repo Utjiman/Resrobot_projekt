@@ -1,5 +1,7 @@
-from backend.connect_to_api import ResRobot
 from datetime import datetime
+
+from backend.connect_to_api import ResRobot
+
 
 class TimeTable:
 
@@ -10,9 +12,11 @@ class TimeTable:
         """
         Show departures from a specific stop
         """
-        data = self.resrobot.timetable_departure(location_id=stop_id)  # Gets data from resrobot
+        data = self.resrobot.timetable_departure(
+            location_id=stop_id
+        )  # Gets data from resrobot
         departures = data.get("Departure", [])
-        
+
         result = []
         for departure in departures:
             line = departure.get("ProductAtStop", {}).get("name", "Okänd linje")
@@ -22,17 +26,11 @@ class TimeTable:
 
         return result
 
-
-
-
-   
     def filter_stop():
-       pass
+        pass
 
-    
-    
     def show_time_to_departure(self, stop_id: int, limit: int = 20):
-       
+
         data = self.resrobot.timetable_departure(location_id=stop_id)
         departures = data.get("Departure", [])
 
@@ -55,19 +53,18 @@ class TimeTable:
             # Calculate time remaining in minutes
             time_remaining = int((departure_time - now).total_seconds() // 60)
             if time_remaining >= 0:  # Only include future departures
-                result.append({
-                    "Linje": line,
-                    "Destination": direction,
-                    "Tid kvar (min)": time_remaining,
-                })
+                result.append(
+                    {
+                        "Linje": line,
+                        "Destination": direction,
+                        "Tid kvar (min)": time_remaining,
+                    }
+                )
 
         return sorted(result, key=lambda x: x["Tid kvar (min)"])[:limit]
 
-
-    
-    
     def show_one_hour_ahead(self, stop_id: int):
-       
+
         data = self.resrobot.timetable_departure(location_id=stop_id)
         departures = data.get("Departure", [])
 
@@ -88,10 +85,12 @@ class TimeTable:
 
             time_remaining = int((departure_time - now).total_seconds() // 60)
             if time_remaining >= 0:
-                result.append({
-                    "Linje": line,
-                    "Destination": direction,
-                    "Tid kvar (min)": time_remaining,
-                })
+                result.append(
+                    {
+                        "Linje": line,
+                        "Destination": direction,
+                        "Tid kvar (min)": time_remaining,
+                    }
+                )
 
         return sorted(result, key=lambda x: x["Tid kvar (min)"])
