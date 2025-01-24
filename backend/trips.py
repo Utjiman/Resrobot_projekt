@@ -29,8 +29,9 @@ class TripPlanner:
 
     def __init__(self, origin_id, destination_id) -> None:
 
+        self.origin_id = origin_id
+        self.destination_id = destination_id
         self.trips = resrobot.trips(origin_id, destination_id).get("Trip")
-        self.number_trips = len(self.trips)
 
     def next_available_trip(self) -> pd.DataFrame:
         next_trip = self.trips[0]
@@ -63,4 +64,35 @@ class TripPlanner:
         """Fetches all available trips today between the origin_id and destination_id
         It returns a list of DataFrame objects, where each item corresponds to a trip
         """
-        # TODO: implement this method
+        trips_today = []
+        today = pd.Timestamp("today").strftime("%Y-%m-%d")
+
+        for trip in self.trips:
+            leglist = trip.get("LegList").get("Leg")
+            df_legs = pd.DataFrame(leglist)
+
+            df_stops = pd.json_normalize(
+                df_legs["Stops"].dropna(), "Stop", errors="ignore"
+            )
+            df_stops["time"] = df_stops["arrTime"].fillna(df_stops["depTime"])
+            df_stops["date"] = df_stops["arrDate"].fillna(df_stops["depDate"])
+
+            if (df_stops["date"].str.contains(today)).any():
+                trips_today.append(
+                    df_stops[
+                        [
+                            "name",
+                            "extId",
+                            "lon",
+                            "lat",
+                            "depTime",
+                            "depDate",
+                            "arrTime",
+                            "arrDate",
+                            "time",
+                            "date",
+                        ]
+                    ]
+                )
+
+        return trips_today
