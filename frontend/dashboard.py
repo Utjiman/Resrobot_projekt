@@ -1,6 +1,7 @@
 import streamlit as st
 
 from backend.connect_to_api import ResRobot
+from backend.eda_visualization import prepare_and_plot_graph
 from backend.time_table import TimeTable
 from utils.constants import StationIds
 
@@ -59,11 +60,13 @@ def närliggande_page():
 
 
 def data_page():
-    st.markdown("# Reseplanerare")
-    st.markdown(
-        "Denna sida är under konstruktion och kommer snart att erbjuda avancerade grafer och annat gott."
-    )
-    st.write("Kommer snart...")
+    st.markdown("# Grafvisning")
+    st.markdown("Visualisering av avgångar och ankomster per timme.")
+
+    station_id = 740000002
+
+    plot = prepare_and_plot_graph(station_id)
+    st.pyplot(plot)
 
 
 def main():
