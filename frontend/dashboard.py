@@ -5,14 +5,9 @@ from backend.time_table import TimeTable
 from utils.constants import StationIds
 
 
-def main():
-    st.set_page_config(page_title="Reseplanerare", layout="wide")
+def tidtabell_page(timetable):
     st.markdown("# Tidtabell")
     st.markdown("Tidtabell för vald hållplats.")
-
-    resrobot = ResRobot()
-    timetable = TimeTable(resrobot)
-
     st.sidebar.header("Inställningar")
     stop_options = {station.name: station.value for station in StationIds}
     selected_stop = st.sidebar.selectbox("Välj hållplats", list(stop_options.keys()))
@@ -45,6 +40,29 @@ def main():
         st.table(departures)
     else:
         st.write("Inga avgångar hittades.")
+
+
+def reseplanerare_page():
+    st.markdown("# Reseplanerare")
+    st.markdown(
+        "Denna sida är under konstruktion och kommer snart att erbjuda avancerade reseplaneringsfunktioner."
+    )
+    st.write("Kommer snart...")
+
+
+def main():
+    st.set_page_config(page_title="Reseplanerare", layout="wide")
+
+    st.sidebar.title("Navigation")
+    page = st.sidebar.radio("Gå till", ["Tidtabell", "Reseplanerare"])
+
+    if page == "Tidtabell":
+        # Instansiera ResRobot och TimeTable endast om Tidtabell-sidan väljs
+        resrobot = ResRobot()
+        timetable = TimeTable(resrobot)
+        tidtabell_page(timetable)
+    elif page == "Reseplanerare":
+        reseplanerare_page()
 
 
 if __name__ == "__main__":
