@@ -2,7 +2,7 @@ import streamlit as st
 
 from backend.connect_to_api import ResRobot
 from backend.time_table import TimeTable
-from utils.constants import StationIds
+from utils.constants import CSS_PATH, StationIds
 
 
 def tidtabell_page(timetable):
@@ -56,6 +56,8 @@ def main():
     st.sidebar.title("Navigation")
     page = st.sidebar.radio("Gå till", ["Tidtabell", "Reseplanerare"])
 
+    load_css()
+
     if page == "Tidtabell":
         # Instansiera ResRobot och TimeTable endast om Tidtabell-sidan väljs
         resrobot = ResRobot()
@@ -63,6 +65,11 @@ def main():
         tidtabell_page(timetable)
     elif page == "Reseplanerare":
         reseplanerare_page()
+
+
+def load_css():
+    with open(CSS_PATH) as css:
+        st.markdown(f"<style>{css.read()}</style>", unsafe_allow_html=True)
 
 
 if __name__ == "__main__":
