@@ -1,7 +1,12 @@
 import streamlit as st
+import streamlit.components.v1 as components
 
 from backend.connect_to_api import ResRobot
-from backend.eda_visualization import prepare_and_plot_graph
+from backend.eda_visualization import (
+    create_map_with_stops,
+    get_nearby_stops,
+    prepare_and_plot_graph,
+)
 from backend.time_table import TimeTable
 from utils.constants import CSS_PATH, StationIds
 
@@ -52,11 +57,30 @@ def reseplanerare_page():
 
 
 def närliggande_page():
-    st.markdown("# Närliggande")
+    st.markdown("# Närliggande Hållplatser")
     st.markdown(
-        "Denna sida är under konstruktion och kommer snart att erbjuda avancerade funktioner om närliggande hållplatser."
+        "Här visas en karta med närliggande hållplatser baserat på en vald huvudhållplats."
     )
-    st.write("Kommer snart...")
+
+    ext_id = st.text_input("Ange extId för huvudhållplats", value="740001590")
+
+    # Radie för närliggande hållplatser
+    radius = st.slider(
+        "Välj radie (i meter)", min_value=100, max_value=1000, step=100, value=500
+    )
+
+    # Generera kartan om ext_id är angiven
+    if ext_id:
+        try:
+            stops_data = get_nearby_stops(ext_id, radius=radius)
+            folium_map = create_map_with_stops(stops_data)
+
+            # Visa kartan i Streamlit
+            components.html(folium_map._repr_html_(), height=600)
+        except Exception as e:
+            st.error(f"Något gick fel: {e}")
+    else:
+        st.info("Ange en extId för att visa hållplatser.")
 
 
 def data_page():
