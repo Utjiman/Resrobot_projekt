@@ -50,11 +50,29 @@ def reseplanerare_page():
     st.write("Kommer snart...")
 
 
+def närliggande_page():
+    st.markdown("# Närliggande")
+    st.markdown(
+        "Denna sida är under konstruktion och kommer snart att erbjuda avancerade funktioner om närliggande hållplatser."
+    )
+    st.write("Kommer snart...")
+
+
+def data_page():
+    st.markdown("# Reseplanerare")
+    st.markdown(
+        "Denna sida är under konstruktion och kommer snart att erbjuda avancerade grafer och annat gott."
+    )
+    st.write("Kommer snart...")
+
+
 def main():
     st.set_page_config(page_title="Reseplanerare", layout="wide")
 
     st.sidebar.title("Navigation")
-    page = st.sidebar.radio("Gå till", ["Tidtabell", "Reseplanerare"])
+    page = st.sidebar.radio(
+        "Gå till", ["Tidtabell", "Reseplanerare", "Närliggande", "Data"]
+    )
 
     if page == "Tidtabell":
         # Instansiera ResRobot och TimeTable endast om Tidtabell-sidan väljs
@@ -63,6 +81,10 @@ def main():
         tidtabell_page(timetable)
     elif page == "Reseplanerare":
         reseplanerare_page()
+    elif page == "Närliggande":
+        närliggande_page()
+    elif page == "Data":
+        data_page()
 
 
 if __name__ == "__main__":
