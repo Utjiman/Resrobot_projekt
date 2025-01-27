@@ -26,15 +26,7 @@ class ResRobot:
         url = f"https://api.resrobot.se/v2.1/location.name?input={location}&format=json&accessId={self.API_KEY}"
         response = requests.get(url)
         result = response.json()
-
-        print(f"{'Name':<50} extId")
-
-        for stop in result.get("stopLocationOrCoordLocation"):
-            stop_data = next(iter(stop.values()))
-
-            # returns None if extId doesn't exist
-            if stop_data.get("extId"):
-                print(f"{stop_data['name']:<50} {stop_data['extId']}")
+        return result
 
     def timetable_departure(self, location_id=740015565):
         url = f"https://api.resrobot.se/v2.1/departureBoard?id={location_id}&format=json&accessId={self.API_KEY}"
@@ -48,7 +40,14 @@ class ResRobot:
         result = response.json()
         return result
 
+    def get_stop_details(self, ext_id: str):
+        url = f"https://api.resrobot.se/v2.1/location.name?input={ext_id}&format=json&accessId={self.API_KEY}"
+        response = requests.get(url)
+        result = response.json()
+        return result
 
-# resrobot = ResRobot()
-
-# pprint(resrobot.timetable_arrival()["Arrival"][0])
+    def get_nearby_stops(self, lat: float, lon: float, radius: int = 1000):
+        url = f"https://api.resrobot.se/v2.1/location.nearbystops?originCoordLat={lat}&originCoordLong={lon}&r={radius}&format=json&accessId={self.API_KEY}"
+        response = requests.get(url)
+        result = response.json()
+        return result
