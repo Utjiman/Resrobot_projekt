@@ -10,26 +10,23 @@ class Stops:
 
     def get_stop_info(self, ext_id: str):
         """
-        Gets info about a specific stop
+        Gets info about specific stop
         """
-        data = self.resrobot.access_id_from_location(ext_id)
-        stop_data = data.get("stopLocationOrCoordLocation", [])
-        if stop_data:
-            stop_details = next(iter(stop_data[0].values()))
-            return {
-                "name": stop_details.get("name"),
-                "lat": stop_details.get("lat"),
-                "lon": stop_details.get("lon"),
-                "products": stop_details.get("products"),
-            }
-        return None
+        data = self.resrobot.get_stop_details(ext_id)
+        stop_data = data["stopLocationOrCoordLocation"][0]["StopLocation"]
+        return {
+            "name": stop_data["name"],
+            "lat": stop_data["lat"],
+            "lon": stop_data["lon"],
+            "products": stop_data["products"],
+        }
 
     def find_nearby_stops(self, lat: float, lon: float, radius: int = 1000):
         """
-        Finds nearby stops based on coordinates and radius
+        Finds nearby stops
         """
         data = self.resrobot.get_nearby_stops(lat, lon, radius)
-        nearby_stops = [
+        return [
             {
                 "name": stop["StopLocation"]["name"],
                 "lat": stop["StopLocation"]["lat"],
@@ -37,6 +34,5 @@ class Stops:
                 "dist": stop["StopLocation"]["dist"],
                 "products": stop["StopLocation"]["products"],
             }
-            for stop in data.get("stopLocationOrCoordLocation", [])
+            for stop in data["stopLocationOrCoordLocation"]
         ]
-        return nearby_stops
