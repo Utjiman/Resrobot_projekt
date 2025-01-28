@@ -96,3 +96,62 @@ class TripPlanner:
                 )
 
         return trips_today
+
+    def calc_number_of_stops_():
+        """
+        Calculates the total number of stops for the trip.
+
+        1. Access to `self.trips` (list of trips retrieved from the API).
+        2. Iterate through each trip and its "Legs" (segments of the trip).
+        3. For each "Leg," extract the list of "Stops" and count them.
+        Returns:
+        int: Total number of stops across all legs in the trip.
+        """
+
+        pass
+
+    def calc_number_of_changes():
+        """
+        Calculates the number of changes (transfers) during the trip.
+
+        1. Access to `self.trips`.
+        2. For each trip, iterate through its "Legs".
+        3. Count the number of "Legs" in each trip and subtract 1 (changes = number of legs - 1).
+        Returns:
+        int: Total number of changes (transfers) for the trip.
+        """
+
+        pass
+
+    def calc_total_time():
+        """
+        Calculates the total travel time for the trip in minutes.
+
+        1. Access to `self.trips`.
+        2. Extract the departure time from the first "Leg" and the arrival time from the last "Leg."
+        3. Convert these times to datetime objects.
+        4. Calculate the difference between the arrival and departure times.
+        Returns:
+        int: Total travel time in minutes.
+        """
+
+        pass
+
+    def map_for_trip():
+        """
+        Prepares data for a map showing all stops on the trip.
+
+        1. Get all trips from `self.trips`.
+        2. Extract stop details like name, latitude, longitude, arrival time, and departure time for each stop.
+        3. Return the data as a list of dictionaries.
+
+        Returns:
+            list[dict]: Each dictionary includes:
+                - "name": Stop name.
+                - "lat": Latitude.
+                - "lon": Longitude.
+                - "arr_time": Arrival time.
+                - "dep_time": Departure time.
+        """
+
+        pass
