@@ -1,13 +1,10 @@
 import streamlit as st
 import streamlit.components.v1 as components
+from Graphs import prepare_and_plot_graph
 
 from backend.connect_to_api import ResRobot
-from backend.eda_visualization import (
-    create_map_with_stops,
-    get_nearby_stops,
-    prepare_and_plot_graph,
-)
 from backend.time_table import TimeTable
+from frontend.plot_maps import create_map_with_stops, get_nearby_stops
 from utils.constants import StationIds
 
 
