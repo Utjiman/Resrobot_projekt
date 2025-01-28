@@ -1,4 +1,15 @@
-body {
-    background-color: #ff0000 !important;
-    margin: 0;
+
+.stApp {
+    background-color: #f2e6d9;
+}
+
+
+.block-container {
+    padding-top: 0px;
+}
+
+
+
+header, .stApp > header {
+    display: none;
 }

@@ -101,8 +101,6 @@ def main():
         "Gå till", ["Tidtabell", "Reseplanerare", "Närliggande", "Data"]
     )
 
-    load_css()
-
     if page == "Tidtabell":
         # Instansiera ResRobot och TimeTable endast om Tidtabell-sidan väljs
         resrobot = ResRobot()
@@ -114,6 +112,8 @@ def main():
         närliggande_page()
     elif page == "Data":
         data_page()
+
+    load_css()
 
 
 def load_css():
