@@ -13,3 +13,25 @@
 header, .stApp > header {
     display: none;
 }
+
+.video-container {
+    width: 140vw; /* Full bredd */
+    height: 250px; /* Justera höjden efter behov */
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    justify-content: left;
+    align-items: left;
+}
+
+/* Anpassad videobanner */
+.banner-video {
+    width: 40%; /* Sträck ut videon över hela bredden */
+    height: 70%; /* Sträck ut videon över hela höjden */
+    object-fit: fill; /* Se till att videon fyller hela bannern */
+    border-radius: 10px;
+    pointer-events: none; /* Förhindra interaktion */
+}
+
+
+

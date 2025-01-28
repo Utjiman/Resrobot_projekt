@@ -3,9 +3,21 @@ import streamlit.components.v1 as components
 from Graphs import prepare_and_plot_graph
 
 from backend.connect_to_api import ResRobot
+from backend.helpers import get_video_as_base64, load_css
 from backend.time_table import TimeTable
 from frontend.plot_maps import create_map_with_stops, get_nearby_stops
-from utils.constants import CSS_PATH, StationIds
+from utils.constants import StationIds
+
+load_css("frontend/styles.css")
+
+# Ladda in video som Base64
+video_base64 = get_video_as_base64("frontend/media/2.mp4")
+
+# Ladda in HTML-template för videon och ersätter platsen för Base64-värdet
+with open("frontend/templates/banner.html", "r", encoding="utf-8") as f:
+    banner_html = f.read().replace("{VIDEO_BASE64}", video_base64)
+
+st.markdown(banner_html, unsafe_allow_html=True)
 
 
 def tidtabell_page(timetable):
@@ -91,8 +103,6 @@ def data_page():
 
 
 def main():
-    st.set_page_config(page_title="Reseplanerare", layout="wide")
-
     st.sidebar.title("Navigation")
     page = st.sidebar.radio(
         "Gå till", ["Tidtabell", "Reseplanerare", "Närliggande", "Data"]
@@ -109,13 +119,6 @@ def main():
         närliggande_page()
     elif page == "Data":
         data_page()
-
-    load_css()
-
-
-def load_css():
-    with open(CSS_PATH) as css:
-        st.markdown(f"<style>{css.read()}</style>", unsafe_allow_html=True)
 
 
 if __name__ == "__main__":
