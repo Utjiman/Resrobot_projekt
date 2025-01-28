@@ -1,6 +1,12 @@
 import streamlit as st
+import streamlit.components.v1 as components
 
 from backend.connect_to_api import ResRobot
+from backend.eda_visualization import (
+    create_map_with_stops,
+    get_nearby_stops,
+    prepare_and_plot_graph,
+)
 from backend.time_table import TimeTable
 from utils.constants import StationIds
 
@@ -50,11 +56,50 @@ def reseplanerare_page():
     st.write("Kommer snart...")
 
 
+def närliggande_page():
+    st.markdown("# Närliggande Hållplatser")
+    st.markdown(
+        "Här visas en karta med närliggande hållplatser baserat på en vald huvudhållplats."
+    )
+
+    ext_id = st.text_input("Ange extId för huvudhållplats", value="740001590")
+
+    # Radie för närliggande hållplatser
+    radius = st.slider(
+        "Välj radie (i meter)", min_value=100, max_value=1000, step=100, value=500
+    )
+
+    # Generera kartan om ext_id är angiven
+    if ext_id:
+        try:
+            stops_data = get_nearby_stops(ext_id, radius=radius)
+            folium_map = create_map_with_stops(stops_data)
+
+            # Visa kartan i Streamlit
+            components.html(folium_map._repr_html_(), height=600)
+        except Exception as e:
+            st.error(f"Något gick fel: {e}")
+    else:
+        st.info("Ange en extId för att visa hållplatser.")
+
+
+def data_page():
+    st.markdown("# Grafvisning")
+    st.markdown("Visualisering av avgångar och ankomster per timme.")
+
+    station_id = 740000002
+
+    plot = prepare_and_plot_graph(station_id)
+    st.pyplot(plot)
+
+
 def main():
     st.set_page_config(page_title="Reseplanerare", layout="wide")
 
     st.sidebar.title("Navigation")
-    page = st.sidebar.radio("Gå till", ["Tidtabell", "Reseplanerare"])
+    page = st.sidebar.radio(
+        "Gå till", ["Tidtabell", "Reseplanerare", "Närliggande", "Data"]
+    )
 
     if page == "Tidtabell":
         # Instansiera ResRobot och TimeTable endast om Tidtabell-sidan väljs
@@ -63,6 +108,10 @@ def main():
         tidtabell_page(timetable)
     elif page == "Reseplanerare":
         reseplanerare_page()
+    elif page == "Närliggande":
+        närliggande_page()
+    elif page == "Data":
+        data_page()
 
 
 if __name__ == "__main__":
