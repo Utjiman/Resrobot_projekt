@@ -8,7 +8,7 @@ from backend.eda_visualization import (
     prepare_and_plot_graph,
 )
 from backend.time_table import TimeTable
-from utils.constants import StationIds
+from utils.constants import CSS_PATH, StationIds
 
 
 def tidtabell_page(timetable):
@@ -112,6 +112,13 @@ def main():
         närliggande_page()
     elif page == "Data":
         data_page()
+
+    load_css()
+
+
+def load_css():
+    with open(CSS_PATH) as css:
+        st.markdown(f"<style>{css.read()}</style>", unsafe_allow_html=True)
 
 
 if __name__ == "__main__":
