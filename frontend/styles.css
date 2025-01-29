@@ -1,6 +1,6 @@
 
 .stApp {
-    background-color: #f2e6d9;
+    background-color: #FAFAD2;
 }
 
 
@@ -26,12 +26,33 @@ header, .stApp > header {
 
 /* Anpassad videobanner */
 .banner-video {
-    width: 40%; /* Sträck ut videon över hela bredden */
-    height: 70%; /* Sträck ut videon över hela höjden */
+    width: 40%;
+    height: 70%;
     object-fit: fill; /* Se till att videon fyller hela bannern */
     border-radius: 10px;
     pointer-events: none; /* Förhindra interaktion */
 }
 
 
+
+/* Ändra bakgrundsfärg på sidopanelen */
+.stSidebar {
+    background-color: #F0E68C;
+}
+
+/* Ändra textfärg i sidopanelen */
+.stSidebar .css-1d391kg {
+    color: #FFFFFF;
+}
+
+/* Ändra färg på knappar */
+.stSidebar .st-bd {
+    background-color: #d4d419;
+    border-radius: 5px;
+}
+
+/* Justera sidopanelens padding */
+.stSidebar .block-container {
+    padding: 20px;
+}
 
