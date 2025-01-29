@@ -10,6 +10,9 @@ def main():
     total_stops = trip_planner.calc_number_of_stops_(trip_index=0)
     print(f"Total number of stops for the selected trip: {total_stops}")
 
+    total_time = trip_planner.calc_total_time(trip_index=0)
+    print(f"Total time for the selected trip: {total_time}")
+
 
 if __name__ == "__main__":
     main()
