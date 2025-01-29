@@ -97,18 +97,17 @@ class TripPlanner:
 
         return trips_today
 
-    def calc_number_of_stops_():
+    def calc_number_of_stops_(self):
         """
         Calculates the total number of stops for the trip.
-
-        1. Access to `self.trips` (list of trips retrieved from the API).
-        2. Iterate through each trip and its "Legs" (segments of the trip).
-        3. For each "Leg," extract the list of "Stops" and count them.
-        Returns:
-        int: Total number of stops across all legs in the trip.
         """
+        total_stops = 0
 
-        pass
+        for trip in self.trips:
+            for leg in trip.get("LegList", {}).get("Leg", []):
+                total_stops += len(leg.get("Stops", {}).get("Stop", []))
+
+        return total_stops
 
     def calc_number_of_changes():
         """
