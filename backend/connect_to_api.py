@@ -28,18 +28,6 @@ class ResRobot:
         result = response.json()
         return result
 
-    def timetable_departure(self, location_id=740015565):
-        url = f"https://api.resrobot.se/v2.1/departureBoard?id={location_id}&format=json&accessId={self.API_KEY}"
-        response = requests.get(url)
-        result = response.json()
-        return result
-
-    def timetable_arrival(self, location_id=740015565):
-        url = f"https://api.resrobot.se/v2.1/arrivalBoard?id={location_id}&format=json&accessId={self.API_KEY}"
-        response = requests.get(url)
-        result = response.json()
-        return result
-
     def get_stop_details(self, ext_id: str):
         url = f"https://api.resrobot.se/v2.1/location.name?input={ext_id}&format=json&accessId={self.API_KEY}"
         response = requests.get(url)
