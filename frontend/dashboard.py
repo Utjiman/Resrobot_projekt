@@ -1,14 +1,11 @@
 import streamlit as st
 import streamlit.components.v1 as components
+from Graphs import prepare_and_plot_graph
 
 from backend.connect_to_api import ResRobot
-from backend.eda_visualization import (
-    create_map_with_stops,
-    get_nearby_stops,
-    prepare_and_plot_graph,
-)
 from backend.time_table import TimeTable
-from utils.constants import StationIds
+from frontend.plot_maps import create_map_with_stops, get_nearby_stops
+from utils.constants import CSS_PATH, StationIds
 
 
 def tidtabell_page(timetable):
@@ -112,6 +109,13 @@ def main():
         närliggande_page()
     elif page == "Data":
         data_page()
+
+    load_css()
+
+
+def load_css():
+    with open(CSS_PATH) as css:
+        st.markdown(f"<style>{css.read()}</style>", unsafe_allow_html=True)
 
 
 if __name__ == "__main__":
