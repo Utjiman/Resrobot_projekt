@@ -1,9 +1,5 @@
-import os
-
 import requests
-from dotenv import load_dotenv
-
-load_dotenv()
+import streamlit as st
 
 
 class ResRobot:
@@ -11,7 +7,7 @@ class ResRobot:
 
     def __init__(self, api_key=None):
         """Initializes ResRobot with an API key."""
-        self.api_key = api_key or os.getenv("API_KEY")
+        self.api_key = api_key or st.secrets["api"]["API_KEY"]
 
         if not self.api_key:
             raise ValueError(
