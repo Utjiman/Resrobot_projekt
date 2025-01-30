@@ -20,6 +20,7 @@ executing==2.1.0
 flake8==7.1.1
 folium==0.19.4
 frozenlist==1.5.0
+fuzzywuzzy ==0.18.0
 geographiclib==2.0
 geopy==2.4.1
 gitdb==4.0.12
@@ -35,6 +36,7 @@ jupyter-client==8.6.3
 jupyter-core==5.7.2
 markdown-it-py==3.0.0
 markupsafe==3.0.2
+matplotlib==3.10.0
 matplotlib-inline==0.1.7
 mccabe==0.7.0
 mdurl==0.1.2
@@ -70,6 +72,7 @@ referencing==0.36.1
 requests==2.32.3
 rich==13.9.4
 rpds-py==0.22.3
+seaborn==0.13.2
 setuptools==75.8.0
 six==1.17.0
 smmap==5.0.2

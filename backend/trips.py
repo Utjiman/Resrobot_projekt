@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import pandas as pd
 
 from backend.connect_to_api import ResRobot
@@ -97,18 +99,17 @@ class TripPlanner:
 
         return trips_today
 
-    def calc_number_of_stops_():
+    def calc_number_of_stops_(self, trip_index=0):
         """
         Calculates the total number of stops for the trip.
-
-        1. Access to `self.trips` (list of trips retrieved from the API).
-        2. Iterate through each trip and its "Legs" (segments of the trip).
-        3. For each "Leg," extract the list of "Stops" and count them.
-        Returns:
-        int: Total number of stops across all legs in the trip.
         """
-
-        pass
+        selected_trip = self.trips[
+            trip_index
+        ]  # Selects a specific trip based on trip_index
+        total_stops = sum(
+            len(leg["Stops"]["Stop"]) for leg in selected_trip["LegList"]["Leg"]
+        )  # Counts the total number of stops by summing up the stops in each leg of the trip
+        return total_stops
 
     def calc_number_of_changes():
         """
@@ -123,19 +124,32 @@ class TripPlanner:
 
         pass
 
-    def calc_total_time():
-        """
-        Calculates the total travel time for the trip in minutes.
+    def calc_total_time(self, trip_index=0):
+        """Calculates the total travel time for the trip in HH:MM format."""
 
-        1. Access to `self.trips`.
-        2. Extract the departure time from the first "Leg" and the arrival time from the last "Leg."
-        3. Convert these times to datetime objects.
-        4. Calculate the difference between the arrival and departure times.
-        Returns:
-        int: Total travel time in minutes.
-        """
+        if not self.trips:
+            return "No trips found"
 
-        pass
+        # Select the specified trip
+        selected_trip = self.trips[trip_index]
+
+        # Extract first departure and last arrival times
+        first_leg = selected_trip["LegList"]["Leg"][0]
+        last_leg = selected_trip["LegList"]["Leg"][-1]
+
+        departure_time = f"{first_leg['Origin']['date']} {first_leg['Origin']['time']}"
+        arrival_time = (
+            f"{last_leg['Destination']['date']} {last_leg['Destination']['time']}"
+        )
+
+        # Convert and calculate duration
+        fmt = "%Y-%m-%d %H:%M:%S"
+        duration = datetime.strptime(arrival_time, fmt) - datetime.strptime(
+            departure_time, fmt
+        )
+
+        # Return total travel time in HH:MM format
+        return str(duration).split(".")[0]
 
     def map_for_trip():
         """
