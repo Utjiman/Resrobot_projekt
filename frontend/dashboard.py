@@ -1,3 +1,6 @@
+import os
+import sys
+
 import streamlit as st
 from Graphs import prepare_and_plot_graph
 from streamlit.components.v1 import html
@@ -7,6 +10,9 @@ from backend.helpers import get_video_as_base64, load_css
 from backend.Stop_module import Stops
 from backend.time_table import TimeTable
 from frontend.plot_maps import create_map_with_stops, get_nearby_stops
+
+# Lägg till root-mappen i sys.path så att backend hittas
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 resrobot = ResRobot()
 stops = Stops(resrobot)

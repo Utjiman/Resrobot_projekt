@@ -1,8 +1,14 @@
+import os
+import sys
+
 import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
 
 from backend.resrobot_day import ResRobotDay
+
+# Lägg till projektroten i sökvägen så att backend hittas
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 
 def prepare_and_plot_graph(station_id):
