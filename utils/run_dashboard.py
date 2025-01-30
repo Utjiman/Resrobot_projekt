@@ -1,11 +1,6 @@
-import os
-import sys
 from subprocess import run
 
-from utils.constants import FRONTEND_PATH  # Importera efter att sys.path är uppdaterat
-
-# Lägg till projektets root-mapp i sys.path
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+from utils.constants import FRONTEND_PATH
 
 
 def run_dashboard():
