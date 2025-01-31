@@ -17,7 +17,7 @@ class ResRobotDay:
         # Skapa en instans av ResRobot
         self.res = ResRobot()
         # Återanvänd API_KEY
-        self.API_KEY = self.res.API_KEY
+        self.API_KEY = self.res.api_key
 
     def departures_until_now(self, station_id: int) -> pd.DataFrame:
         """

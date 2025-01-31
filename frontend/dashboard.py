@@ -12,6 +12,8 @@ resrobot = ResRobot()
 stops = Stops(resrobot)
 load_css("frontend/styles.css")
 
+api_key = st.secrets["api"]["API_KEY"]
+
 # Ladda in video som Base64
 video_base64 = get_video_as_base64("frontend/media/2.mp4")
 

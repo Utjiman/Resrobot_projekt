@@ -90,3 +90,4 @@ watchdog==6.0.0
 wcwidth==0.2.13
 xyzservices==2024.9.0
 yarl==1.18.3
+-e .
