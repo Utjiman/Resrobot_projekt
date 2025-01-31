@@ -34,22 +34,16 @@ header, .stApp > header {
 }
 
 
-
 /* Ändra bakgrundsfärg på sidopanelen */
 .stSidebar {
-    background-color: #F0E68C;
+    background-color: #F0E68C !important;
 }
 
 /* Ändra textfärg i sidopanelen */
 .stSidebar .css-1d391kg {
-    color: #FFFFFF;
+    color: #FFFFFF !important;
 }
 
-/* Ändra färg på knappar */
-.stSidebar .st-bd {
-    background-color: #d4d419;
-    border-radius: 5px;
-}
 
 /* Justera sidopanelens padding */
 .stSidebar .block-container {
