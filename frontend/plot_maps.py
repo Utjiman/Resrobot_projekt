@@ -1,15 +1,13 @@
-import os
 from abc import ABC, abstractmethod
 
 import folium
-import requests
 import streamlit as st
-from dotenv import load_dotenv
 
+from backend.connect_to_api import ResRobot  # Importera API-klienten
 from backend.trips import TripPlanner
 
-load_dotenv()
-API_KEY = os.getenv("API_KEY")
+# Skapa en instans av ResRobot för API-anrop
+api_client = ResRobot()
 
 
 class Maps(ABC):
@@ -60,47 +58,50 @@ class TripMap(Maps):
 
 
 def get_coordinates_from_extid(ext_id):
-    """Hämtar koordinater för en hållplats baserat på extId."""
-    url = f"https://api.resrobot.se/v2.1/location.name?input={ext_id}&format=json&accessId={API_KEY}"
-    result = requests.get(url).json()
+    """Hämtar koordinater för en hållplats baserat på extId via ResRobot."""
+    stop_data = api_client.get_stop_details(ext_id)
 
-    for stop in result.get("stopLocationOrCoordLocation", []):
-        stop_data = list(stop.values())[0]
+    if not stop_data or "stopLocationOrCoordLocation" not in stop_data:
+        return None
+
+    for stop in stop_data["stopLocationOrCoordLocation"]:
+        stop_info = list(stop.values())[0]
         return {
-            "name": stop_data.get("name"),
-            "lat": stop_data.get("lat"),
-            "lon": stop_data.get("lon"),
+            "name": stop_info.get("name"),
+            "lat": float(stop_info.get("lat")),
+            "lon": float(stop_info.get("lon")),
         }
     return None
 
 
 def get_nearby_stops(ext_id, radius=1000):
-    """Hämtar närliggande hållplatser inom en given radie."""
+    """Hämtar närliggande hållplatser inom en given radie via ResRobot."""
 
     # Hämta huvudhållplatsens koordinater och namn
-    base_url = f"https://api.resrobot.se/v2.1/location.name?input={ext_id}&format=json&accessId={API_KEY}"
-    base_data = next(
-        iter(requests.get(base_url).json()["stopLocationOrCoordLocation"][0].values())
+    base_stop = get_coordinates_from_extid(ext_id)
+
+    if not base_stop:
+        return None
+
+    nearby_stops = api_client.get_nearby_stops(
+        base_stop["lat"], base_stop["lon"], radius
     )
 
-    # Hämta närliggande hållplatser
-    nearby_url = f"https://api.resrobot.se/v2.1/location.nearbystops?originCoordLat={base_data['lat']}&originCoordLong={base_data['lon']}&r={radius}&format=json&accessId={API_KEY}"
-    nearby_stops = [
+    if not nearby_stops or "stopLocationOrCoordLocation" not in nearby_stops:
+        return None
+
+    stop_list = [
         {
             "name": stop["StopLocation"]["name"],
             "lat": float(stop["StopLocation"]["lat"]),
             "lon": float(stop["StopLocation"]["lon"]),
         }
-        for stop in requests.get(nearby_url).json()["stopLocationOrCoordLocation"]
+        for stop in nearby_stops["stopLocationOrCoordLocation"]
     ]
 
     return {
-        "base": {
-            "name": base_data["name"],
-            "lat": float(base_data["lat"]),
-            "lon": float(base_data["lon"]),
-        },
-        "nearby_stops": nearby_stops,
+        "base": base_stop,
+        "nearby_stops": stop_list,
     }
 
 
@@ -119,11 +120,7 @@ def create_map_with_stops(data):
 
     # Lägg till närliggande hållplatser (blåa)
     for stop in data["nearby_stops"]:
-        if (
-            stop["name"] == data["base"]["name"]
-            and stop["lat"] == data["base"]["lat"]
-            and stop["lon"] == data["base"]["lon"]
-        ):
+        if stop["name"] == data["base"]["name"]:
             continue
         folium.Marker(
             [stop["lat"], stop["lon"]],
