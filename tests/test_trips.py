@@ -13,6 +13,9 @@ def main():
     total_time = trip_planner.calc_total_time(trip_index=0)
     print(f"Total time for the selected trip: {total_time}")
 
+    total_changes = trip_planner.calc_number_of_changes(trip_index=0)
+    print(f"Total number of changes for the selected trip: {total_changes}")
+
 
 if __name__ == "__main__":
     main()
