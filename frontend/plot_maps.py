@@ -3,10 +3,9 @@ from abc import ABC, abstractmethod
 import folium
 import streamlit as st
 
-from backend.connect_to_api import ResRobot  # Importera API-klienten
+from backend.connect_to_api import ResRobot
 from backend.trips import TripPlanner
 
-# Skapa en instans av ResRobot för API-anrop
 api_client = ResRobot()
 
 

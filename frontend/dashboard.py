@@ -6,6 +6,7 @@ from backend.connect_to_api import ResRobot
 from backend.helpers import get_video_as_base64, load_css
 from backend.Stop_module import Stops
 from backend.time_table import TimeTable
+from backend.translate import LANGUAGES, get_translated_texts
 from frontend.plot_maps import create_map_with_stops, get_nearby_stops
 
 resrobot = ResRobot()
@@ -24,188 +25,161 @@ with open("frontend/templates/banner.html", "r", encoding="utf-8") as f:
 st.markdown(banner_html, unsafe_allow_html=True)
 
 
-def tidtabell_page(timetable):
-    st.markdown("# Tidtabell")
-    st.markdown("Tidtabell för vald hållplats.")
+def tidtabell_page(lang_texts):
+    """Sidan för att visa tidtabeller."""
+    st.markdown(f"# {lang_texts['departure_header']}")
+    st.markdown(lang_texts["departure_subheader"])
 
-    # Skapa instanser av ResRobot och Stops
-    resrobot = ResRobot()
-    stops = Stops(resrobot)
-
-    st.sidebar.header("Inställningar")
-
+    st.sidebar.header(lang_texts["settings"])
     # Funktioner i sidomenyn (kommer alltid vara synliga)
     function_options = {
-        "Visa avgångar från hållplats": "show_departure",
-        "Visa tid kvar till avgång": "show_time_to_departure",
-        "Visa avgångar inom en timme": "show_one_hour_ahead",
+        lang_texts["function_departures"]: "show_departure",
+        lang_texts["function_time_left"]: "show_time_to_departure",
+        lang_texts["function_one_hour"]: "show_one_hour_ahead",
     }
 
     selected_function = st.sidebar.selectbox(
-        "Välj funktion", list(function_options.keys())
+        lang_texts["function_select"], list(function_options.keys())
     )
 
     # Sökfält för att ange station (bara visa när användaren skriver något)
     location_query = st.sidebar.text_input(
-        "Ange en hållplats att söka efter:", key="station_search"
+        lang_texts["enter_station"], key="station_search"
     )
 
-    station_id = None  # Initiera station_id som None
+    station_id = None
+    selected_stop = None
 
     if location_query:
-        # Sök efter stationer baserat på namn
         results = stops.search_stop_by_name(location_query)
-
         if results:
-            # Skapa en dictionary med stationens namn och id
             stop_options = {res["name"]: res["extId"] for res in results}
-
-            # Dynamisk dropdown baserat på sökresultat
             selected_stop = st.sidebar.selectbox(
-                "Välj hållplats:",
+                lang_texts["choose_stop"],
                 list(stop_options.keys()),
-                index=(
-                    0 if len(stop_options) > 0 else None
-                ),  # Sätter standardval om resultat finns
             )
-
-            # Hämta station_id från den valda stationen
             station_id = stop_options[selected_stop]
         else:
-            st.sidebar.warning("Inga matchande hållplatser hittades.")
+            st.sidebar.warning(lang_texts["no_stations_found"])
 
-    # Om en station har valts, visa information för vald funktion
-    if station_id:
-        if selected_function == "Visa avgångar från hållplats":
+    # Om en station är vald, visa resultat baserat på vald funktion
+    if station_id and selected_stop:
+        timetable = TimeTable(resrobot)
+
+        if selected_function == lang_texts["function_departures"]:
             departures = timetable.show_departure_from_stop(station_id)
 
-        elif selected_function == "Visa tid kvar till avgång":
+        elif selected_function == lang_texts["function_time_left"]:
             limit = st.sidebar.number_input(
-                "Antal avgångar att visa", min_value=1, max_value=50, value=20
+                lang_texts["function_limit"], min_value=1, max_value=50, value=20
             )
             departures = timetable.show_time_to_departure(station_id, limit=limit)
 
-        elif selected_function == "Visa avgångar inom en timme":
+        elif selected_function == lang_texts["function_one_hour"]:
             departures = timetable.show_one_hour_ahead(station_id)
 
-        # Visa avgångar
-        st.subheader(f"Avgångar från {selected_stop}")
+        # Visa avgångar i en tabell
+        st.subheader(f"{lang_texts['table_subheader']} {selected_stop}")
         if departures:
             st.table(departures)
         else:
-            st.write("Inga avgångar hittades.")
+            st.write(lang_texts["no_departures"])
 
 
-def reseplanerare_page():
-    st.markdown("# Reseplanerare")
-    st.markdown(
-        "Denna sida är under konstruktion och kommer snart att erbjuda avancerade reseplaneringsfunktioner."
-    )
-    st.write("Kommer snart...")
+def reseplanerare_page(lang_texts):
+    """Sidan för reseplanering (fortfarande under utveckling)."""
+    st.markdown(f"# {lang_texts['planner_header']}")
+    st.markdown(lang_texts["planner_coming_soon"])
 
 
-def närliggande_page():
-    st.markdown("# Närliggande Hållplatser")
-    st.markdown(
-        "Här visas en karta med närliggande hållplatser baserat på en vald huvudhållplats."
-    )
+def närliggande_page(lang_texts):
+    """Sidan för närliggande hållplatser med kartvy."""
+    st.markdown(f"# {lang_texts['nearby_header']}")
+    st.markdown(lang_texts["nearby_description"])
 
-    # Inputfält för att ange en station (som kan användas med fuzzy search)
     location_query = st.sidebar.text_input(
-        "Ange en hållplats att söka efter:", key="station_search"
+        lang_texts["enter_station"], key="station_search"
     )
-
-    # Skapa instanser av ResRobot och Stops för att kunna söka
-    resrobot = ResRobot()
-    stops = Stops(resrobot)
-
-    # Hämta extId för vald hållplats om användaren skriver något i sökfältet
     ext_id = None
+
     if location_query:
         results = stops.search_stop_by_name(location_query)
         if results:
             stop_options = {res["name"]: res["extId"] for res in results}
             selected_stop = st.sidebar.selectbox(
-                "Välj en hållplats:", list(stop_options.keys())
+                lang_texts["choose_stop"], list(stop_options.keys())
             )
             ext_id = stop_options[selected_stop]
         else:
-            st.warning("Inga matchande hållplatser hittades.")
+            st.warning(lang_texts["no_stations_found"])
 
-    # Radie för närliggande hållplatser
     radius = st.slider(
-        "Välj radie (i meter)", min_value=100, max_value=1000, step=100, value=500
+        lang_texts["radius_slider"], min_value=100, max_value=1000, step=100, value=500
     )
 
-    # Generera kartan om ext_id är angiven (eller använd det som valts)
     if ext_id:
         try:
             stops_data = get_nearby_stops(ext_id, radius=radius)
             folium_map = create_map_with_stops(stops_data)
-
-            # Visa kartan i Streamlit
             html(folium_map._repr_html_(), height=600)
         except Exception as e:
             st.error(f"Något gick fel: {e}")
     else:
-        st.info("Ange en hållplats för att visa närliggande hållplatser.")
+        st.info(lang_texts["info_enter_stop"])
 
 
-def data_page():
-    st.markdown("# Grafvisning")
-    st.markdown("Visualisering av avgångar och ankomster per timme.")
+def data_page(lang_texts):
+    """Sidan för att visa graf med ankomster/avgångar."""
+    st.markdown(f"# {lang_texts['data_header']}")
+    st.markdown(lang_texts["data_description"])
 
     location_query = st.sidebar.text_input(
-        "Ange en station att söka efter:", key="station_search"
+        lang_texts["enter_station"], key="station_search"
     )
-
-    station_id = None  # Initiera station_id som None
+    station_id = None
 
     if location_query:
-        # Sök efter stationer baserat på namn
         results = stops.search_stop_by_name(location_query)
-
         if results:
-            # Skapa en dictionary med stationens namn och id
             stop_options = {res["name"]: res["extId"] for res in results}
-
-            # Dynamisk dropdown baserat på sökresultat
             selected_station = st.sidebar.selectbox(
-                "Välj en station:",
-                list(stop_options.keys()),
-                index=(
-                    0 if len(stop_options) > 0 else None
-                ),  # Sätter standardval om resultat finns
+                lang_texts["choose_stop"], list(stop_options.keys())
             )
-
-            # Hämta station_id från den valda stationen
             station_id = stop_options[selected_station]
         else:
-            st.sidebar.warning("Inga matchande stationer hittades.")
+            st.sidebar.warning(lang_texts["no_data"])
 
     if station_id:
-        # Kör visualisering om en station är vald
         plot = prepare_and_plot_graph(station_id)
         st.pyplot(plot)
 
 
 def main():
-    st.sidebar.title("Navigation")
+
+    selected_language = st.sidebar.selectbox("🌍 Välj språk", list(LANGUAGES.keys()))
+    lang_code = LANGUAGES[selected_language]
+    lang_texts = get_translated_texts(lang_code)
+
+    st.sidebar.title(lang_texts["sidebar_title"])
+
     page = st.sidebar.radio(
-        "Gå till", ["Tidtabell", "Reseplanerare", "Närliggande", "Data"]
+        lang_texts["go_to_page"],
+        [
+            lang_texts["sidebar_option1"],
+            lang_texts["sidebar_option2"],
+            lang_texts["sidebar_option3"],
+            lang_texts["sidebar_option4"],
+        ],
     )
 
-    if page == "Tidtabell":
-        # Instansiera ResRobot och TimeTable endast om Tidtabell-sidan väljs
-        resrobot = ResRobot()
-        timetable = TimeTable(resrobot)
-        tidtabell_page(timetable)
-    elif page == "Reseplanerare":
-        reseplanerare_page()
-    elif page == "Närliggande":
-        närliggande_page()
-    elif page == "Data":
-        data_page()
+    if page == lang_texts["sidebar_option1"]:
+        tidtabell_page(lang_texts)
+    elif page == lang_texts["sidebar_option2"]:
+        reseplanerare_page(lang_texts)
+    elif page == lang_texts["sidebar_option3"]:
+        närliggande_page(lang_texts)
+    elif page == lang_texts["sidebar_option4"]:
+        data_page(lang_texts)
 
 
 if __name__ == "__main__":
