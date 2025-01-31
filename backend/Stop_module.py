@@ -69,7 +69,7 @@ class Stops:
                 "dist": stop["StopLocation"]["dist"],
                 "products": stop["StopLocation"]["products"],
             }
-            for stop in data["stopLocationOrCoordLocation"]
+            for stop in data.get("stopLocationOrCoordLocation")
         ]
 
 
