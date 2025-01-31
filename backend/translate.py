@@ -1,10 +1,15 @@
 from googletrans import Translator
 
-# Stöd för språk
 LANGUAGES = {
     "Svenska": "sv",
     "English": "en",
     "Suomi": "fi",
+    "Dansk": "da",
+    "Deutsch": "de",
+    "Français": "fr",
+    "Español": "es",
+    "中文 (Zhōngwén)": "zh-cn",
+    "Русский (Russkiy)": "ru",
 }
 
 translator = Translator()
