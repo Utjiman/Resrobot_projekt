@@ -1,5 +1,6 @@
 from datetime import datetime
 
+import folium
 import pandas as pd
 
 from backend.connect_to_api import ResRobot
@@ -99,7 +100,7 @@ class TripPlanner:
 
         return trips_today
 
-    def calc_number_of_stops_(self, trip_index=0):
+    def calc_number_of_stops(self, trip_index=0):
         """
         Calculates the total number of stops for the trip.
         """
@@ -154,21 +155,44 @@ class TripPlanner:
         # Return total travel time in HH:MM format
         return str(duration).split(".")[0]
 
-    def map_for_trip():
-        """
-        Prepares data for a map showing all stops on the trip.
+    def map_for_trip(self, trip_index=0):
 
-        1. Get all trips from `self.trips`.
-        2. Extract stop details like name, latitude, longitude, arrival time, and departure time for each stop.
-        3. Return the data as a list of dictionaries.
+        if not self.trips or trip_index >= len(self.trips):
+            print("No valid trip found.")
+            return None
 
-        Returns:
-            list[dict]: Each dictionary includes:
-                - "name": Stop name.
-                - "lat": Latitude.
-                - "lon": Longitude.
-                - "arr_time": Arrival time.
-                - "dep_time": Departure time.
-        """
+        selected_trip = self.trips[trip_index]
+        stops_data = []
 
-        pass
+        # Hämta alla stopp från alla legs
+        for leg in selected_trip["LegList"]["Leg"]:
+            stops = leg.get("Stops", {}).get("Stop", [])
+            for stop in stops:
+                stop_data = {
+                    "name": stop.get("name"),
+                    "lat": float(stop.get("lat", 0)),
+                    "lon": float(stop.get("lon", 0)),
+                    "arr_time": stop.get("arrTime"),
+                    "dep_time": stop.get("depTime"),
+                }
+                stops_data.append(stop_data)
+
+        if not stops_data:
+            print("No stops data found.")
+            return None
+
+        df_stops = pd.DataFrame(stops_data)
+
+        # Skapa en karta centrerad på medelvärdet av alla koordinater
+        map_center = [df_stops["lat"].mean(), df_stops["lon"].mean()]
+        trip_map = folium.Map(location=map_center, zoom_start=6)
+
+        # Lägg till markörer för varje stopp
+        for _, row in df_stops.iterrows():
+            folium.Marker(
+                location=[row["lat"], row["lon"]],
+                popup=f"<b>{row['name']}</b><br>Arr: {row['arr_time']}<br>Dep: {row['dep_time']}",
+                icon=folium.Icon(color="blue"),
+            ).add_to(trip_map)
+
+        return trip_map
