@@ -111,18 +111,21 @@ class TripPlanner:
         )  # Counts the total number of stops by summing up the stops in each leg of the trip
         return total_stops
 
-    def calc_number_of_changes():
+    def calc_number_of_changes(self, trip_index=0):
         """
         Calculates the number of changes (transfers) during the trip.
-
-        1. Access to `self.trips`.
-        2. For each trip, iterate through its "Legs".
-        3. Count the number of "Legs" in each trip and subtract 1 (changes = number of legs - 1).
-        Returns:
-        int: Total number of changes (transfers) for the trip.
         """
 
-        pass
+        selected_trip = self.trips[trip_index]
+        number_of_legs = len(
+            selected_trip["LegList"]["Leg"]
+        )  # Count the number of legs
+        number_of_changes = max(
+            0, number_of_legs - 1
+        )  # Calculate transfers (minimum 0),
+        # Changes = legs - 1 (e.g., 3 legs → 2 changes)
+
+        return number_of_changes
 
     def calc_total_time(self, trip_index=0):
         """Calculates the total travel time for the trip in HH:MM format."""

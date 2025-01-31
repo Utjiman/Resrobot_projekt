@@ -26,9 +26,6 @@ class TimeTable:
 
         return result
 
-    def filter_stop():
-        pass
-
     def show_time_to_departure(self, stop_id: int, limit: int = 20):
 
         data = self.resrobot.timetable_departure(location_id=stop_id)
