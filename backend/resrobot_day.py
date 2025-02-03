@@ -8,25 +8,24 @@ from backend.connect_to_api import ResRobot
 
 class ResRobotDay:
     """
-    Hämtar dagens avgångar och ankomster från midnatt till nu,
-    API:et sparar bara data några timmar tillbaka så man får inte
-    data för mer än 5-6 timmar bakåt i tiden.
+    This Python class fetches today's departures and arrivals
+    from the ResRobot API, covering the time range from
+    midnight to the current moment. However, the API only
+    retains data for a few hours, meaning it does not provide
+    historical data beyond 5-6 hours.
     """
 
     def __init__(self):
-        # Skapa en instans av ResRobot
         self.res = ResRobot()
-        # Återanvänd API_KEY
         self.API_KEY = self.res.api_key
 
     def departures_until_now(self, station_id: int) -> pd.DataFrame:
         """
-        Hämtar avgångar (departureBoard) från midnatt fram till nu (dagens datum).
+        Fetches departures (departureBoard) from midnight until now (today's date).
         """
         now = datetime.now()
         date_str = now.strftime("%Y-%m-%d")
 
-        # Beräkna minuter sedan midnatt
         midnight = now.replace(hour=0, minute=0, second=0, microsecond=0)
         minutes_since_midnight = int((now - midnight).total_seconds() / 60)
 
@@ -35,8 +34,8 @@ class ResRobotDay:
             "id": station_id,
             "format": "json",
             "accessId": self.API_KEY,
-            "date": date_str,  # dagens datum
-            "time": "00:00",  # från midnatt
+            "date": date_str,
+            "time": "00:00",
             "duration": minutes_since_midnight,
         }
         try:
@@ -51,7 +50,7 @@ class ResRobotDay:
 
     def arrivals_until_now(self, station_id: int) -> pd.DataFrame:
         """
-        Hämtar ankomster (arrivalBoard) från midnatt fram till nu (dagens datum).
+        Fetches arrivals (arrivalBoard) from midnight until now (today's date).
         """
         now = datetime.now()
         date_str = now.strftime("%Y-%m-%d")

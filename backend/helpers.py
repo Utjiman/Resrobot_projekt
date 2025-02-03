@@ -10,6 +10,6 @@ def load_css(file_path):
 
 
 def get_video_as_base64(video_path):
-    """Konverterar en video till Base64 för att kunna bäddas in som HTML i Streamlit."""
+    """Converting a video to Base64 to embed it as HTML in Streamlit."""
     with open(video_path, "rb") as vid_file:
         return base64.b64encode(vid_file.read()).decode("utf-8")
