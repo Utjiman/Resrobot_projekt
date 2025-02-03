@@ -58,7 +58,7 @@ class TripMap(Maps):
 
 def get_coordinates_from_extid(ext_id):
     """Hämtar koordinater för en hållplats baserat på extId via ResRobot."""
-    stop_data = api_client.get_stop_details(ext_id)
+    stop_data = api_client.get_location_info(ext_id)
 
     if not stop_data or "stopLocationOrCoordLocation" not in stop_data:
         return None
