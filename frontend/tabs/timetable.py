@@ -1,6 +1,5 @@
 import streamlit as st
 
-from backend.connect_to_api import ResRobot
 from backend.Stop_module import Stops
 from backend.time_table import TimeTable
 
@@ -8,8 +7,8 @@ from backend.time_table import TimeTable
 class TimetablePage:
     def __init__(self, lang_texts, resrobot):
         self.lang_texts = lang_texts
-        self.resrobot = ResRobot()
-        self.stops = Stops(resrobot)
+        self.resrobot = resrobot
+        self.stops = Stops(self.resrobot)
 
     def display_timetable(self):
         """Sidan för att visa tidtabeller."""
