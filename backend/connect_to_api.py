@@ -3,21 +3,20 @@ import streamlit as st
 
 
 class ResRobot:
-    class ResRobot:
-        """
-        A Python client for interacting with the ResRobot API.
+    """
+    A Python client for interacting with the ResRobot API.
 
-        This class provides methods to retrieve public transport data such as trips,
-        location details, timetables, and nearby stops using the ResRobot API.
+    This class provides methods to retrieve public transport data such as trips,
+    location details, timetables, and nearby stops using the ResRobot API.
 
-        Features:
-        - Fetch trip details between two locations.
-        - Retrieve location information based on a place name.
-        - Get departure and arrival timetables for a specific stop.
-        - Find nearby stops based on GPS coordinates.
+    Features:
+    - Fetch trip details between two locations.
+    - Retrieve location information based on a place name.
+    - Get departure and arrival timetables for a specific stop.
+    - Find nearby stops based on GPS coordinates.
 
-        API key is required and should be stored in `secrets.toml`.
-        """
+    API key is required and should be stored in `secrets.toml`.
+    """
 
     def __init__(self, api_key=None):
         """Initializes ResRobot with an API key."""
