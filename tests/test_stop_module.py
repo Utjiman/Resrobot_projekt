@@ -1,5 +1,5 @@
 from backend.connect_to_api import ResRobot
-from backend.stop_module import Stops
+from backend.Stop_module import Stops
 
 
 def main():

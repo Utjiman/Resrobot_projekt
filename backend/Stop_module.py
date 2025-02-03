@@ -10,7 +10,7 @@ class Stops:
     def search_stop_by_name(self, location, threshold=80):
 
         # Hämta alla stop locations från ResRobot
-        all_data = self.resrobot.access_id_from_location(location)
+        all_data = self.resrobot.get_location_info(location)
 
         # Extrahera stop locations från API:ts JSON-struktur
         stop_locations = all_data.get("stopLocationOrCoordLocation", [])
@@ -47,7 +47,7 @@ class Stops:
         """
         Gets info about specific stop
         """
-        data = self.resrobot.get_stop_details(ext_id)
+        data = self.resrobot.get_location_info(ext_id)
         stop_data = data["stopLocationOrCoordLocation"][0]["StopLocation"]
         return {
             "name": stop_data["name"],
@@ -73,4 +73,4 @@ class Stops:
         ]
 
 
-# Skapa instans av ResRobot
+#
