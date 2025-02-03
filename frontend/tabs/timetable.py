@@ -17,6 +17,11 @@ class TimetablePage:
 
         st.sidebar.header(self.lang_texts["settings"])
 
+        # Sökfält för att ange station (bara visa när användaren skriver något)
+        location_query = st.sidebar.text_input(
+            self.lang_texts["enter_station"], key="station_search"
+        )
+
         # Funktioner i sidomenyn (kommer alltid vara synliga)
         function_options = {
             self.lang_texts["function_departures"]: "show_departure",
@@ -26,11 +31,6 @@ class TimetablePage:
 
         selected_function = st.sidebar.selectbox(
             self.lang_texts["function_select"], list(function_options.keys())
-        )
-
-        # Sökfält för att ange station (bara visa när användaren skriver något)
-        location_query = st.sidebar.text_input(
-            self.lang_texts["enter_station"], key="station_search"
         )
 
         station_id = None
