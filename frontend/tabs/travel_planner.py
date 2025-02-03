@@ -1,3 +1,5 @@
+import os
+
 import streamlit as st
 
 from backend.Stop_module import Stops
@@ -56,7 +58,6 @@ class TravelPlannerPage:
                 "Inga resultat för destinationen, kontrollera stavningen eller försök med en annan station."
             )
 
-        # Visa reseinformation om både start och destination är angivna
         if origin_id and destination_id:
             trip_planner = TripPlanner(origin_id, destination_id)
             try:
@@ -72,8 +73,29 @@ class TravelPlannerPage:
                     df_trip = trips_today[selected_trip_index]
                     if df_trip is not None and not df_trip.empty:
                         st.subheader(self.lang_texts["planner_trip_info"])
-                        st.dataframe(df_trip[["name", "time", "date"]])
 
+                        # Konvertera DataFrame till HTML med klassen "my-travel-table"
+                        table_html = df_trip[["name", "time", "date"]].to_html(
+                            classes="my-travel-table",
+                            index=False,
+                            header=False,
+                            border=0,
+                        )
+
+                        template_path = os.path.join(
+                            "frontend", "templates", "res_info.html"
+                        )
+                        with open(template_path, "r", encoding="utf-8") as file:
+                            html_template = file.read()
+
+                        res_info_html = html_template.replace(
+                            "{{ table_content }}", table_html
+                        )
+
+                        # Visa den sammansatta HTML-koden
+                        st.markdown(res_info_html, unsafe_allow_html=True)
+
+                        # Visa övriga metrik med kolumner
                         col1, col2, col3 = st.columns(3)
                         col1.metric(
                             self.lang_texts["planner_total_stops"],
