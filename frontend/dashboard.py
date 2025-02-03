@@ -6,8 +6,9 @@ from backend.connect_to_api import ResRobot
 from backend.helpers import get_video_as_base64, load_css
 from backend.Stop_module import Stops
 from backend.translate import LANGUAGES, get_translated_texts
-from frontend.pages.timetable import TimetablePage
 from frontend.plot_maps import create_map_with_stops, get_nearby_stops
+from frontend.tabs.timetable import TimetablePage
+from frontend.tabs.travel_planner import TravelPlannerPage
 
 resrobot = ResRobot()
 stops = Stops(resrobot)
@@ -24,12 +25,6 @@ with open("frontend/templates/banner.html", "r", encoding="utf-8") as f:
     banner_html = f.read().replace("{VIDEO_BASE64}", video_base64)
 
 st.markdown(banner_html, unsafe_allow_html=True)
-
-
-def reseplanerare_page(lang_texts):
-    """Sidan för reseplanering (fortfarande under utveckling)."""
-    st.markdown(f"# {lang_texts['planner_header']}")
-    st.markdown(lang_texts["planner_coming_soon"])
 
 
 def närliggande_page(lang_texts):
@@ -95,15 +90,15 @@ def data_page(lang_texts):
 
 
 def main():
-
+    # SwedenToGo
     selected_language = st.sidebar.selectbox("🌍 Välj språk", list(LANGUAGES.keys()))
     lang_code = LANGUAGES[selected_language]
     lang_texts = get_translated_texts(lang_code)
 
     st.sidebar.title(lang_texts["sidebar_title"])
 
-    # Skapa TimetablePage med översatta texter
     timetable = TimetablePage(lang_texts=lang_texts, resrobot=resrobot)
+    travel_planner = TravelPlannerPage(lang_texts=lang_texts, resrobot=resrobot)
 
     page = st.sidebar.radio(
         lang_texts["go_to_page"],
@@ -118,7 +113,7 @@ def main():
     if page == lang_texts["sidebar_option1"]:
         timetable.display_timetable()
     elif page == lang_texts["sidebar_option2"]:
-        reseplanerare_page(lang_texts)
+        travel_planner.display_travel_planner()
     elif page == lang_texts["sidebar_option3"]:
         närliggande_page(lang_texts)
     elif page == lang_texts["sidebar_option4"]:
