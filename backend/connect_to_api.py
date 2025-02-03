@@ -3,7 +3,21 @@ import streamlit as st
 
 
 class ResRobot:
-    """ResRobot API client for API requests."""
+    class ResRobot:
+        """
+        A Python client for interacting with the ResRobot API.
+
+        This class provides methods to retrieve public transport data such as trips,
+        location details, timetables, and nearby stops using the ResRobot API.
+
+        Features:
+        - Fetch trip details between two locations.
+        - Retrieve location information based on a place name.
+        - Get departure and arrival timetables for a specific stop.
+        - Find nearby stops based on GPS coordinates.
+
+        API key is required and should be stored in `secrets.toml`.
+        """
 
     def __init__(self, api_key=None):
         """Initializes ResRobot with an API key."""
@@ -11,7 +25,7 @@ class ResRobot:
 
         if not self.api_key:
             raise ValueError(
-                "API_KEY is missing! Make sure it is defined in the .env file."
+                "API_KEY is missing! Make sure it is defined in the secrets.toml file."
             )
 
     def _make_request(self, url: str):
@@ -32,31 +46,18 @@ class ResRobot:
         )
         return self._make_request(url)
 
-    def access_id_from_location(self, location):
+    def get_location_info(self, location):
         url = (
             f"https://api.resrobot.se/v2.1/location.name?"
             f"input={location}&format=json&accessId={self.api_key}"
         )
         return self._make_request(url)
 
-    def timetable_departure(self, location_id):
+    def get_timetable(self, location_id, board_type="departure"):
+        endpoint = "departureBoard" if board_type == "departure" else "arrivalBoard"
         url = (
-            f"https://api.resrobot.se/v2.1/departureBoard?"
+            f"https://api.resrobot.se/v2.1/{endpoint}?"
             f"id={location_id}&format=json&accessId={self.api_key}"
-        )
-        return self._make_request(url)
-
-    def timetable_arrival(self, location_id):
-        url = (
-            f"https://api.resrobot.se/v2.1/arrivalBoard?"
-            f"id={location_id}&format=json&accessId={self.api_key}"
-        )
-        return self._make_request(url)
-
-    def get_stop_details(self, ext_id):
-        url = (
-            f"https://api.resrobot.se/v2.1/location.name?"
-            f"input={ext_id}&format=json&accessId={self.api_key}"
         )
         return self._make_request(url)
 
