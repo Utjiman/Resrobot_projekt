@@ -15,5 +15,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-# kör python tests/test_resrobot_day.py i terminalen
