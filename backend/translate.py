@@ -29,9 +29,8 @@ def translate_text(text, lang_code):
 def get_translated_texts(lang_code):
     """
     Returnerar en dictionary med översatta texter för hela dashboarden.
-    Originalen är på svenska, men översätts dynamiskt med Google Translate.
+    Originaltexterna är på svenska, men översätts dynamiskt med Google Translate.
     """
-    # Originaltexter på svenska
     texts_sv = {
         "choose_language": "🌍 Välj språk",
         "sidebar_title": "Navigation",
@@ -55,7 +54,20 @@ def get_translated_texts(lang_code):
         "departure_subheader": "Tidtabell för vald hållplats.",
         "table_subheader": "Avgångar från",
         "planner_header": "Reseplanerare",
-        "planner_coming_soon": "Denna sida är under konstruktion. Kommer snart ...",
+        "planner_choose_trip": "Välj en resa för att visa information och karta:",
+        "planner_no_trips": "Inga fler resor tillgängliga idag.",
+        "planner_trip_not_found": "Ingen resa hittades mellan de valda stationerna.",
+        "planner_trip_error": "Ett fel uppstod vid hämtning av resedata: ",
+        "planner_origin": "Ange startstation:",
+        "planner_destination": "Ange destination:",
+        "planner_select_origin": "Välj startstation:",
+        "planner_select_destination": "Välj destination:",
+        "planner_select_trip": "Välj resa:",
+        "planner_trip_info": "Reseinformation",
+        "planner_total_stops": "🛑 Antal hållplatser",
+        "planner_total_changes": "🔄 Byten",
+        "planner_total_time": "⏳ Total restid",
+        "planner_no_map": "Ingen karta kunde genereras för denna resa.",
         "nearby_header": "Närliggande Hållplatser",
         "nearby_description": "Här visas en karta med närliggande hållplatser baserat på en vald huvudhållplats.",
         "radius_slider": "Välj radie (i meter)",
@@ -63,6 +75,7 @@ def get_translated_texts(lang_code):
         "data_header": "Grafvisning",
         "data_description": "Visualisering av avgångar och ankomster per timme.",
         "no_data": "Inga matchande stationer hittades.",
+        "planner_sidebar_title": "🚆 Reseplanering",
     }
 
     translated_texts = {}
