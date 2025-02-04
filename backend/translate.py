@@ -24,7 +24,7 @@ def translate_text(text, lang_code):
     the translation fails, the original text is returned.
     """
     try:
-        translated = translator.translate(text, dest=lang_code)
+        translated = translator.translate(text, src="sv", dest=lang_code)
         return translated.text
     except Exception as e:
         print(f"Translation error for '{text}' to '{lang_code}': {e}")
