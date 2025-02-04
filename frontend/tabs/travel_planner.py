@@ -96,7 +96,7 @@ class TravelPlannerPage:
                 if df_trip is not None and not df_trip.empty:
                     st.subheader(self.lang_texts["planner_trip_info"])
 
-                    table_html = df_trip[["name", "time", "date"]].to_html(
+                    table_html = df_trip[["name", "line", "time", "date"]].to_html(
                         classes="my-travel-table",
                         index=False,
                         header=False,

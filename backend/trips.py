@@ -32,57 +32,6 @@ class TripPlanner:
         response = resrobot.trips(origin_id, destination_id)
         self.trips = response.get("Trip", []) if response else []
 
-    def next_available_trip(self) -> pd.DataFrame:
-        if not self.trips:
-            return pd.DataFrame()
-
-        next_trip = self.trips[0]
-        leglist = next_trip.get("LegList", {}).get("Leg", [])
-        stops_list = []
-
-        for leg in leglist:
-            stops_container = leg.get("Stops", {})
-            stops = stops_container.get("Stop")
-            if stops:
-                if isinstance(stops, list):
-                    stops_list.extend(stops)
-                else:
-                    stops_list.append(stops)
-
-        if not stops_list:
-            print("Not enough data available to generate trip information.")
-            return pd.DataFrame()
-
-        df_stops = pd.DataFrame(stops_list)
-
-        if "arrTime" in df_stops.columns or "depTime" in df_stops.columns:
-            df_stops["time"] = df_stops.get("arrTime").fillna(df_stops.get("depTime"))
-        else:
-            df_stops["time"] = "Not available"
-
-        if "arrDate" in df_stops.columns or "depDate" in df_stops.columns:
-            df_stops["date"] = df_stops.get("arrDate").fillna(df_stops.get("depDate"))
-        else:
-            df_stops["date"] = "Not available"
-
-        required_cols = [
-            "name",
-            "extId",
-            "lon",
-            "lat",
-            "depTime",
-            "depDate",
-            "arrTime",
-            "arrDate",
-            "time",
-            "date",
-        ]
-        for col in required_cols:
-            if col not in df_stops.columns:
-                df_stops[col] = "Not available"
-
-        return df_stops[required_cols]
-
     def next_available_trips_today(self) -> list[pd.DataFrame]:
         trips_today = []
         today = pd.Timestamp("today").strftime("%Y-%m-%d")
@@ -91,24 +40,31 @@ class TripPlanner:
             leglist = trip.get("LegList", {}).get("Leg", [])
             stops_list = []
             for leg in leglist:
+                line_name = leg.get("name", "Okänd linje")
+
                 stops_container = leg.get("Stops", {})
                 stops = stops_container.get("Stop")
                 if stops:
                     if isinstance(stops, list):
-                        stops_list.extend(stops)
+                        for stop in stops:
+                            stop["line"] = line_name
+                            stops_list.append(stop)
                     else:
+                        stops["line"] = line_name
                         stops_list.append(stops)
 
             if not stops_list:
                 continue
 
             df_stops = pd.DataFrame(stops_list)
+
             if "arrTime" in df_stops.columns or "depTime" in df_stops.columns:
                 df_stops["time"] = df_stops.get("arrTime").fillna(
                     df_stops.get("depTime")
                 )
             else:
                 df_stops["time"] = "Not available"
+
             if "arrDate" in df_stops.columns or "depDate" in df_stops.columns:
                 df_stops["date"] = df_stops.get("arrDate").fillna(
                     df_stops.get("depDate")
@@ -131,6 +87,7 @@ class TripPlanner:
                     "arrDate",
                     "time",
                     "date",
+                    "line",
                 ]
                 for col in required_cols:
                     if col not in df_stops.columns:
