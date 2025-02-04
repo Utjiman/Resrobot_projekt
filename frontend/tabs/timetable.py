@@ -1,6 +1,6 @@
 import streamlit as st
 
-from backend.stop_module import Stops
+from backend.stops import Stops
 from backend.timetable import TimeTable
 
 
