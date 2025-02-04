@@ -43,6 +43,9 @@ def main():
     The application is controlled via a sidebar menu, allowing users to
     select different transport-related functionalities.
     """
+    st.sidebar.markdown(
+        '<div class="sidebar-title">Sweden ToGo</div>', unsafe_allow_html=True
+    )
     st.sidebar.title("Sweden ToGo")
 
     selected_language = st.sidebar.selectbox("🌍 Välj språk", list(LANGUAGES.keys()))
