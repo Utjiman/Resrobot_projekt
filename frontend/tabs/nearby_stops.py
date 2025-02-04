@@ -1,7 +1,7 @@
 import streamlit as st
 from streamlit.components.v1 import html
 
-from backend.Stop_module import Stops
+from backend.stop_module import Stops
 from frontend.plot_maps import create_map_with_stops, get_nearby_stops
 
 

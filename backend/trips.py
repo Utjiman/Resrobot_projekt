@@ -10,27 +10,23 @@ resrobot = ResRobot()
 
 class TripPlanner:
     """
-    A class to interact with Resrobot API to plan trips and retrieve details of available journeys.
+    A class to interact with Resrobot API to plan trips and
+    retrieve details of available journeys between a specified
+    origin and destination.
 
-    Check explorations to find id for your location
-
-    Attributes:
-    ----------
-    trips : list
-        A list of trips retrieved from the Resrobot API for the specified origin and destination.
-    number_trips : int
-        The total number of trips available for the specified origin and destination.
-
-    Methods:
-    -------
-    next_available_trip() -> pd.DataFrame:
-        Returns a DataFrame containing details of the next available trip, including stop names,
-        coordinates, departure and arrival times, and dates.
-    next_available_trips_today() -> list[pd.DataFrame]
-        Returns a list of DataFrame objects, where each DataFrame contains similar content as next_available_trip()
+    Features:
+    - Returns details of the next available trip.
+    - Retrieves all trips available for the current day.
+    - Calculates the number of stops and transfers for a trip.
+    - Computes the total travel time for a trip.
+    - Generates a map of the trip's stops using Folium.
     """
 
     def __init__(self, origin_id, destination_id) -> None:
+        """
+        Initializes the class with an origin and destination ID,
+        then fetches trip data from ResRobot.
+        """
         self.origin_id = origin_id
         self.destination_id = destination_id
         response = resrobot.trips(origin_id, destination_id)

@@ -16,13 +16,14 @@ class ResRobotDay:
     """
 
     def __init__(self):
+        """
+        Initializes ResRobotDay with an instance of ResRobot
+        and retrieves the API key.
+        """
         self.res = ResRobot()
         self.API_KEY = self.res.api_key
 
     def departures_until_now(self, station_id: int) -> pd.DataFrame:
-        """
-        Fetches departures (departureBoard) from midnight until now (today's date).
-        """
         now = datetime.now()
         date_str = now.strftime("%Y-%m-%d")
 
@@ -49,9 +50,6 @@ class ResRobotDay:
             return pd.DataFrame()
 
     def arrivals_until_now(self, station_id: int) -> pd.DataFrame:
-        """
-        Fetches arrivals (arrivalBoard) from midnight until now (today's date).
-        """
         now = datetime.now()
         date_str = now.strftime("%Y-%m-%d")
 

@@ -4,17 +4,27 @@ from backend.connect_to_api import ResRobot
 
 
 class TimeTable:
+    """
+    The TimeTable class interacts with the ResRobot API to retrieve departure
+    times from a given stop. This class relies on the ResRobot API for
+    timetable data and uses Python's datetime module to process time calculations.
+
+    Features:
+    - Fetches all departures from a specific stop using its ID.
+    - Calculates the time remaining (in minutes) until each departure from a given
+      stop. Only includes upcoming departures and sorts them by soonest departure.
+    - Retrieves departures within the next hour from a given stop.
+    """
 
     def __init__(self, resrobot: ResRobot):
+        """
+        Initializes TimeTable with a ResRobot instance.
+        """
         self.resrobot = resrobot
 
     def show_departure_from_stop(self, stop_id: int):
-        """
-        Show departures from a specific stop
-        """
-        data = self.resrobot.get_timetable(
-            location_id=stop_id
-        )  # Gets data from resrobot
+        data = self.resrobot.get_timetable(location_id=stop_id)
+
         departures = data.get("Departure", [])
 
         result = []
@@ -27,7 +37,6 @@ class TimeTable:
         return result
 
     def show_time_to_departure(self, stop_id: int, limit: int = 20):
-
         data = self.resrobot.get_timetable(location_id=stop_id)
         departures = data.get("Departure", [])
 
@@ -40,16 +49,14 @@ class TimeTable:
             departure_time_str = departure.get("time", None)
 
             if not departure_time_str:
-                continue  # Skip if time is not available
+                continue
 
-            # Parse departure time to datetime
             departure_time = datetime.strptime(departure_time_str, "%H:%M:%S").replace(
                 year=now.year, month=now.month, day=now.day
             )
 
-            # Calculate time remaining in minutes
             time_remaining = int((departure_time - now).total_seconds() // 60)
-            if time_remaining >= 0:  # Only include future departures
+            if time_remaining >= 0:
                 result.append(
                     {
                         "Linje": line,
@@ -61,7 +68,6 @@ class TimeTable:
         return sorted(result, key=lambda x: x["Tid kvar (min)"])[:limit]
 
     def show_one_hour_ahead(self, stop_id: int):
-
         data = self.resrobot.get_timetable(location_id=stop_id)
         departures = data.get("Departure", [])
 
