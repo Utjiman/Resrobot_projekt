@@ -4,6 +4,17 @@ import seaborn as sns
 
 from backend.resrobot_day import ResRobotDay
 
+"""
+Functions for preparing and visualizing transport data. This
+module retrieves departure and arrival data for a given station and
+generates a bar chart displaying the number of departures and arrivals per hour throughout the day.
+
+Features:
+- Fetch real-time departures and arrivals from the ResRobot API.
+- Process and aggregate data into hourly counts.
+- Generate a bar chart using Matplotlib and Seaborn.
+"""
+
 
 def prepare_and_plot_graph(station_id):
     rr_today = ResRobotDay()
@@ -23,7 +34,6 @@ def prepare_and_plot_graph(station_id):
     else:
         arr_count_by_hour = pd.Series([0] * 24, index=range(24))
 
-    # Kombinera data till en DataFrame
     hours = range(24)
     df_hours = pd.DataFrame(
         {
@@ -33,7 +43,6 @@ def prepare_and_plot_graph(station_id):
         }
     ).set_index("Hour")
 
-    # Omstrukturera DataFrame till långt format för Seaborn
     df_long = df_hours.reset_index().melt(
         id_vars="Hour",
         value_vars=["Departures", "Arrivals"],
