@@ -8,26 +8,6 @@ from frontend.tabs.nearby_stops import NearbyStopsPage
 from frontend.tabs.timetable import TimetablePage
 from frontend.tabs.travel_planner import TravelPlannerPage
 
-"""
-Main entry point for the Sweden ToGo Streamlit application.
-
-This script initializes the ResRobot API, loads styles and media assets, and
-renders the main interface with different transport-related features.
-
-Features:
-- Loads CSS styles and video banners.
-- Supports multiple languages with translation functionality.
-- Provides navigation between different pages:
-  - Timetable view for departures.
-  - Travel planner for trip planning.
-  - Nearby stops with an interactive map.
-  - Data visualization for arrivals and departures.
-
-The application is controlled via a sidebar menu, allowing users to
-select different transport-related functionalities.
-"""
-
-
 resrobot = ResRobot()
 
 load_css("frontend/styles.css")
@@ -45,6 +25,24 @@ st.markdown(banner_html, unsafe_allow_html=True)
 
 
 def main():
+    """
+    Main entry point for the Sweden ToGo Streamlit application.
+
+    This script initializes the ResRobot API, loads styles and media assets, and
+    renders the main interface with different transport-related features.
+
+    Features:
+    - Loads CSS styles and video banners.
+    - Supports multiple languages with translation functionality.
+    - Provides navigation between different pages:
+    - Timetable view for departures.
+    - Travel planner for trip planning.
+    - Nearby stops with an interactive map.
+    - Data visualization for arrivals and departures.
+
+    The application is controlled via a sidebar menu, allowing users to
+    select different transport-related functionalities.
+    """
     st.sidebar.title("Sweden ToGo")
 
     selected_language = st.sidebar.selectbox("🌍 Välj språk", list(LANGUAGES.keys()))
