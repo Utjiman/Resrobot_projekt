@@ -10,31 +10,26 @@ resrobot = ResRobot()
 
 class TripPlanner:
     """
-    A class to interact with Resrobot API to plan trips and retrieve details of available journeys.
+    A class to interact with Resrobot API to plan trips and
+    retrieve details of available journeys between a specified
+    origin and destination.
 
-    Check explorations to find id for your location
-
-    Attributes:
-    ----------
-    trips : list
-        A list of trips retrieved from the Resrobot API for the specified origin and destination.
-    number_trips : int
-        The total number of trips available for the specified origin and destination.
-
-    Methods:
-    -------
-    next_available_trip() -> pd.DataFrame:
-        Returns a DataFrame containing details of the next available trip, including stop names,
-        coordinates, departure and arrival times, and dates.
-    next_available_trips_today() -> list[pd.DataFrame]
-        Returns a list of DataFrame objects, where each DataFrame contains similar content as next_available_trip()
+    Features:
+    - Returns details of the next available trip.
+    - Retrieves all trips available for the current day.
+    - Calculates the number of stops and transfers for a trip.
+    - Computes the total travel time for a trip.
+    - Generates a map of the trip's stops using Folium.
     """
 
     def __init__(self, origin_id, destination_id) -> None:
+        """
+        Initializes the class with an origin and destination ID,
+        then fetches trip data from ResRobot.
+        """
         self.origin_id = origin_id
         self.destination_id = destination_id
         response = resrobot.trips(origin_id, destination_id)
-        # Ensure self.trips is a list; if the API response is empty, set an empty list.
         self.trips = response.get("Trip", []) if response else []
 
     def next_available_trip(self) -> pd.DataFrame:
@@ -42,11 +37,9 @@ class TripPlanner:
             return pd.DataFrame()
 
         next_trip = self.trips[0]
-        # Safely retrieve the list of legs; use an empty list if missing
         leglist = next_trip.get("LegList", {}).get("Leg", [])
         stops_list = []
 
-        # Loop over each leg and extract stop data safely
         for leg in leglist:
             stops_container = leg.get("Stops", {})
             stops = stops_container.get("Stop")
@@ -57,7 +50,6 @@ class TripPlanner:
                     stops_list.append(stops)
 
         if not stops_list:
-            # Return an empty DataFrame if no stop data is available
             print("Not enough data available to generate trip information.")
             return pd.DataFrame()
 
@@ -167,7 +159,6 @@ class TripPlanner:
             return 0
 
         selected_trip = self.trips[trip_index]
-        # default to an empty list if missing
         number_of_legs = len(selected_trip.get("LegList", {}).get("Leg", []))
         number_of_changes = max(0, number_of_legs - 1)
         return number_of_changes
@@ -200,7 +191,6 @@ class TripPlanner:
 
         selected_trip = self.trips[trip_index]
         stops_data = []
-        # Loop through each leg and process stop data
         for leg in selected_trip.get("LegList", {}).get("Leg", []):
             stops = leg.get("Stops", {}).get("Stop")
             if stops:
@@ -221,11 +211,9 @@ class TripPlanner:
             return None
 
         df_stops = pd.DataFrame(stops_data)
-        # Create a map centered on the average latitude and longitude
         map_center = [df_stops["lat"].mean(), df_stops["lon"].mean()]
         trip_map = folium.Map(location=map_center, zoom_start=6)
 
-        # Add markers for each stop
         for _, row in df_stops.iterrows():
             folium.Marker(
                 location=[row["lat"], row["lon"]],

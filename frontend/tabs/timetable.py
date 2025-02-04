@@ -1,7 +1,7 @@
 import streamlit as st
 
-from backend.Stop_module import Stops
-from backend.time_table import TimeTable
+from backend.stop_module import Stops
+from backend.timetable import TimeTable
 
 
 class TimetablePage:
