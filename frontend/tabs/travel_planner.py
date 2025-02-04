@@ -7,6 +7,20 @@ from backend.trips import TripPlanner
 
 
 class TravelPlannerPage:
+    """
+    A Streamlit page for planning public transport trips.
+
+    This class allows users to search for an origin and destination, view
+    available trips, and display trip details including stops, changes,
+    travel time, and an interactive map.
+
+    Features:
+    - Search for origin and destination stops by name.
+    - View available trips for the selected route.
+    - Display detailed trip information, including number of stops and changes.
+    - Show an interactive map of the trip route.
+    """
+
     def __init__(self, lang_texts, resrobot):
         self.lang_texts = lang_texts
         self.resrobot = resrobot
@@ -95,7 +109,6 @@ class TravelPlannerPage:
                     with open(template_path, "r", encoding="utf-8") as file:
                         html_template = file.read()
 
-                    # Replace placeholders in the HTML template:
                     res_info_html = html_template.replace(
                         "{{ table_content }}", table_html
                     )
@@ -126,7 +139,6 @@ class TravelPlannerPage:
                         trip_planner.calc_total_time(trip_index=selected_trip_index),
                     )
 
-                    # Generate the map, if no map is generated, show a warning.
                     trip_map = trip_planner.map_for_trip(trip_index=selected_trip_index)
                     if trip_map:
                         st.components.v1.html(trip_map._repr_html_(), height=500)
