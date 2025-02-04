@@ -1,11 +1,12 @@
 <div class="res-info-container">
-    <!-- Dold checkbox för att toggla expansion -->
+    <!-- Dold checkbox för toggling -->
     <input type="checkbox" id="toggleResInfo" class="toggle-checkbox">
-    <!-- Label utan text – texten kommer via CSS -->
-    <label for="toggleResInfo" class="toggle-label"></label>
+    <!-- Label med placeholder för toggle-text -->
+    <label for="toggleResInfo" class="toggle-label">{{ toggle_text }}</label>
     <!-- Container för tabellinnehållet -->
     <div class="table-wrapper">
       {{ table_content }}
     </div>
   </div>
+  
   

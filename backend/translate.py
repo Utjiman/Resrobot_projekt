@@ -1,3 +1,5 @@
+from functools import lru_cache
+
 from googletrans import Translator
 
 LANGUAGES = {
@@ -15,14 +17,17 @@ LANGUAGES = {
 translator = Translator()
 
 
+@lru_cache(maxsize=128)
 def translate_text(text, lang_code):
     """
     Översätter en given text med Google Translate.
     Om översättning misslyckas returneras originaltexten.
     """
     try:
-        return translator.translate(text, dest=lang_code).text
-    except Exception:
+        translated = translator.translate(text, dest=lang_code)
+        return translated.text
+    except Exception as e:
+        print(f"Translation error for '{text}' to '{lang_code}': {e}")
         return text
 
 
@@ -68,6 +73,7 @@ def get_translated_texts(lang_code):
         "planner_total_changes": "🔄 Byten",
         "planner_total_time": "⏳ Total restid",
         "planner_no_map": "Ingen karta kunde genereras för denna resa.",
+        "insufficient_data_map": "Det finns inte tillräckligt med data för att generera karta.",
         "nearby_header": "Närliggande Hållplatser",
         "nearby_description": "Här visas en karta med närliggande hållplatser baserat på en vald huvudhållplats.",
         "radius_slider": "Välj radie (i meter)",
@@ -76,14 +82,14 @@ def get_translated_texts(lang_code):
         "data_description": "Visualisering av avgångar och ankomster per timme.",
         "no_data": "Inga matchande stationer hittades.",
         "planner_sidebar_title": "🚆 Reseplanering",
+        "toggle_show": "Visa fler stationer",
+        "toggle_hide": "Visa färre stationer",
+        "info_enter_station": "Vänligen ange både startstation och destination för att planera din resa.",
     }
-
     translated_texts = {}
     for key, original_text in texts_sv.items():
-        # Översätt inte om användaren valt Svenska
         if lang_code == "sv":
             translated_texts[key] = original_text
         else:
             translated_texts[key] = translate_text(original_text, lang_code)
-
     return translated_texts
