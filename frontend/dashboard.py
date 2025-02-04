@@ -45,7 +45,9 @@ st.markdown(banner_html, unsafe_allow_html=True)
 
 
 def main():
-    st.sidebar.title("Sweden ToGo")
+    st.sidebar.markdown(
+        '<div class="sidebar-title">Sweden ToGo</div>', unsafe_allow_html=True
+    )
 
     selected_language = st.sidebar.selectbox("🌍 Välj språk", list(LANGUAGES.keys()))
     lang_code = LANGUAGES[selected_language]
