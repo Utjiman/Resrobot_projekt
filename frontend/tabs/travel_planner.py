@@ -9,7 +9,7 @@ from backend.trips import TripPlanner
 class TravelPlannerPage:
     def __init__(self, lang_texts, resrobot):
         self.lang_texts = lang_texts
-        self.resrobot = resrobot
+        self.resrobot = resrobot  # Använd det injicerade objektet
         self.stops = Stops(self.resrobot)
 
     def display_travel_planner(self):
@@ -25,7 +25,10 @@ class TravelPlannerPage:
 
         if not origin_input or not destination_input:
             st.info(
-                "Vänligen ange både startstation och destination för att planera din resa."
+                self.lang_texts.get(
+                    "info_enter_station",
+                    "Vänligen ange både startstation och destination för att planera din resa.",
+                )
             )
             return
 
@@ -40,7 +43,10 @@ class TravelPlannerPage:
             origin_id = origin_options[selected_origin]
         else:
             st.warning(
-                "Inga resultat för startstationen, kontrollera stavningen eller försök med en annan station."
+                self.lang_texts.get(
+                    "no_origin_results",
+                    "Inga resultat för startstationen, kontrollera stavningen eller försök med en annan station.",
+                )
             )
 
         results_destination = self.stops.search_stop_by_name(destination_input)
@@ -55,7 +61,10 @@ class TravelPlannerPage:
             destination_id = destination_options[selected_destination]
         else:
             st.warning(
-                "Inga resultat för destinationen, kontrollera stavningen eller försök med en annan station."
+                self.lang_texts.get(
+                    "no_destination_results",
+                    "Inga resultat för destinationen, kontrollera stavningen eller försök med en annan station.",
+                )
             )
 
         if origin_id and destination_id:
@@ -74,7 +83,6 @@ class TravelPlannerPage:
                     if df_trip is not None and not df_trip.empty:
                         st.subheader(self.lang_texts["planner_trip_info"])
 
-                        # Konvertera DataFrame till HTML med klassen "my-travel-table"
                         table_html = df_trip[["name", "time", "date"]].to_html(
                             classes="my-travel-table",
                             index=False,
@@ -88,14 +96,19 @@ class TravelPlannerPage:
                         with open(template_path, "r", encoding="utf-8") as file:
                             html_template = file.read()
 
+                        # Ersätt placeholders i HTML-mallen:
                         res_info_html = html_template.replace(
                             "{{ table_content }}", table_html
                         )
+                        toggle_text = self.lang_texts.get(
+                            "toggle_show", "Visa fler stationer"
+                        )
+                        res_info_html = res_info_html.replace(
+                            "{{ toggle_text }}", toggle_text
+                        )
 
-                        # Visa den sammansatta HTML-koden
                         st.markdown(res_info_html, unsafe_allow_html=True)
 
-                        # Visa övriga metrik med kolumner
                         col1, col2, col3 = st.columns(3)
                         col1.metric(
                             self.lang_texts["planner_total_stops"],
@@ -116,13 +129,37 @@ class TravelPlannerPage:
                             ),
                         )
 
-                        trip_map = trip_planner.map_for_trip(
-                            trip_index=selected_trip_index
-                        )
-                        if trip_map:
-                            st.components.v1.html(trip_map._repr_html_(), height=500)
-                        else:
-                            st.warning(self.lang_texts["planner_no_map"])
+                        try:
+                            trip_map = trip_planner.map_for_trip(
+                                trip_index=selected_trip_index
+                            )
+                            if trip_map:
+                                st.components.v1.html(
+                                    trip_map._repr_html_(), height=500
+                                )
+                            else:
+                                st.warning(
+                                    self.lang_texts.get(
+                                        "insufficient_data_map",
+                                        "Det finns inte tillräckligt med data för att generera karta.",
+                                    )
+                                )
+                        except KeyError as ke:
+                            if "Stops" in str(ke):
+                                st.warning(
+                                    self.lang_texts.get(
+                                        "insufficient_data_map",
+                                        "Det finns inte tillräckligt med data för att generera karta.",
+                                    )
+                                )
+                            else:
+                                st.error(
+                                    f"{self.lang_texts['planner_trip_error']} {ke}"
+                                )
+                        except Exception as map_error:
+                            st.error(
+                                f"{self.lang_texts['planner_trip_error']} {map_error}"
+                            )
                     else:
                         st.warning(self.lang_texts["planner_trip_not_found"])
                 else:
@@ -130,4 +167,9 @@ class TravelPlannerPage:
             except Exception as e:
                 st.error(f"{self.lang_texts['planner_trip_error']} {e}")
         else:
-            st.info("Vänligen ange både start och destination för att visa resor.")
+            st.info(
+                self.lang_texts.get(
+                    "info_enter_station",
+                    "Vänligen ange både startstation och destination för att visa resor.",
+                )
+            )

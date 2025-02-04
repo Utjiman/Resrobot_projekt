@@ -1,51 +1,35 @@
-
+/* Allmän styling */
 .stApp {
     background-color: #FAFAD2;
 }
-
-
 .block-container {
     padding-top: 0px;
 }
-
-
-
 header, .stApp > header {
     display: none;
 }
-
 .video-container {
-    width: 140vw; /* Full bredd */
-    height: 250px; /* Justera höjden efter behov */
+    width: 140vw;
+    height: 250px;
     overflow: hidden;
     position: relative;
     display: flex;
     justify-content: left;
     align-items: left;
 }
-
-/* Anpassad videobanner */
 .banner-video {
     width: 40%;
     height: 70%;
-    object-fit: fill; /* Se till att videon fyller hela bannern */
+    object-fit: fill;
     border-radius: 10px;
-    pointer-events: none; /* Förhindra interaktion */
+    pointer-events: none;
 }
-
-
-/* Ändra bakgrundsfärg på sidopanelen */
 .stSidebar {
     background-color: #F0E68C !important;
 }
-
-/* Ändra textfärg i sidopanelen */
 .stSidebar .css-1d391kg {
     color: #FFFFFF !important;
 }
-
-
-/* Justera sidopanelens padding */
 .stSidebar .block-container {
     padding: 20px;
 }
@@ -61,6 +45,7 @@ header, .stApp > header {
     display: none;
 }
 
+/* Styling för toggle-labelen med gula nyanser */
 .toggle-label {
     cursor: pointer;
     display: inline-block;
@@ -68,22 +53,12 @@ header, .stApp > header {
     padding: 5px 10px;
     border: 1px solid transparent;
     font-size: 0.9rem;
-    color: #8B8000; /* Mörk gul/grön ton */
+    color: #8B8000;
     transition: background-color 0.3s ease, border-color 0.3s ease;
 }
-
-/* När man hovrar över toggle-labelen, ändra bakgrund och kantfärg */
 .toggle-label:hover {
     background-color: #F0E68C;
     border-color: #DAA520;
-}
-
-.toggle-label::after {
-    content: "Visa fler stationer";
-}
-
-.toggle-checkbox:checked + .toggle-label::after {
-    content: "Visa färre stationer";
 }
 
 /* Styling för tabellen */
@@ -92,14 +67,11 @@ header, .stApp > header {
     border-collapse: collapse;
     background-color: #ffffff;
 }
-
 .my-travel-table td {
     padding: 12px 15px;
     border-bottom: 1px solid #ddd;
     text-align: center;
 }
-
-/* Dölj headern */
 .my-travel-table thead {
     display: none;
 }
@@ -114,7 +86,7 @@ header, .stApp > header {
     display: table-row;
 }
 
-/* Hover-effekt för rader */
+/* Hover-effekt för rader: byt bakgrund till ljusgul */
 .my-travel-table tbody tr:hover {
     background-color: #F0E68C;
     border-color: #DAA520;
