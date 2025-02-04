@@ -1,7 +1,7 @@
 import streamlit as st
 from Graphs import prepare_and_plot_graph
 
-from backend.Stop_module import Stops
+from backend.stops import Stops
 
 
 class DataPage:

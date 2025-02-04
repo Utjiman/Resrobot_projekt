@@ -25,7 +25,28 @@ st.markdown(banner_html, unsafe_allow_html=True)
 
 
 def main():
-    st.sidebar.title("Sweden ToGo")
+    """
+    Main entry point for the Sweden ToGo Streamlit application.
+
+    This script initializes the ResRobot API, loads styles and media assets, and
+    renders the main interface with different transport-related features.
+
+    Features:
+    - Loads CSS styles and video banners.
+    - Supports multiple languages with translation functionality.
+    - Provides navigation between different pages:
+    - Timetable view for departures.
+    - Travel planner for trip planning.
+    - Nearby stops with an interactive map.
+    - Data visualization for arrivals and departures.
+
+    The application is controlled via a sidebar menu, allowing users to
+    select different transport-related functionalities.
+    """
+
+    st.sidebar.markdown(
+        '<div class="sidebar-title">Sweden ToGo</div>', unsafe_allow_html=True
+    )
 
     selected_language = st.sidebar.selectbox("🌍 Välj språk", list(LANGUAGES.keys()))
     lang_code = LANGUAGES[selected_language]

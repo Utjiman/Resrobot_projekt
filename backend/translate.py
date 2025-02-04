@@ -20,11 +20,11 @@ translator = Translator()
 @lru_cache(maxsize=128)
 def translate_text(text, lang_code):
     """
-    Översätter en given text med Google Translate.
-    Om översättning misslyckas returneras originaltexten.
+    Translates a given text using Google Translate. If
+    the translation fails, the original text is returned.
     """
     try:
-        translated = translator.translate(text, dest=lang_code)
+        translated = translator.translate(text, src="sv", dest=lang_code)
         return translated.text
     except Exception as e:
         print(f"Translation error for '{text}' to '{lang_code}': {e}")
@@ -33,8 +33,8 @@ def translate_text(text, lang_code):
 
 def get_translated_texts(lang_code):
     """
-    Returnerar en dictionary med översatta texter för hela dashboarden.
-    Originaltexterna är på svenska, men översätts dynamiskt med Google Translate.
+    Returns a dictionary with translated texts for the entire dashboard. The original
+    texts are in Swedish but are dynamically translated using Google Translate.
     """
     texts_sv = {
         "choose_language": "🌍 Välj språk",
