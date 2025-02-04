@@ -5,24 +5,34 @@ from backend.timetable import TimeTable
 
 
 class TimetablePage:
+    """
+    A Streamlit page for displaying public transport timetables.
+
+    This class allows users to search for a transport stop, select a function
+    to display different timetable views, and view upcoming departures in a table.
+
+    Features:
+    - Search for transport stops by name.
+    - Select different timetable functions (departures, time left, one hour ahead).
+    - Display departure data in a structured table.
+    """
+
     def __init__(self, lang_texts, resrobot):
         self.lang_texts = lang_texts
         self.resrobot = resrobot
         self.stops = Stops(self.resrobot)
 
     def display_timetable(self):
-        """Sidan för att visa tidtabeller."""
+
         st.markdown(f"# {self.lang_texts['departure_header']}")
         st.markdown(self.lang_texts["departure_subheader"])
 
         st.sidebar.header(self.lang_texts["settings"])
 
-        # Sökfält för att ange station (bara visa när användaren skriver något)
         location_query = st.sidebar.text_input(
             self.lang_texts["enter_station"], key="station_search"
         )
 
-        # Funktioner i sidomenyn (kommer alltid vara synliga)
         function_options = {
             self.lang_texts["function_departures"]: "show_departure",
             self.lang_texts["function_time_left"]: "show_time_to_departure",
@@ -48,7 +58,6 @@ class TimetablePage:
             else:
                 st.sidebar.warning(self.lang_texts["no_stations_found"])
 
-        # Om en station är vald, visa resultat baserat på vald funktion
         if station_id and selected_stop:
             timetable = TimeTable(self.resrobot)
 
@@ -67,7 +76,6 @@ class TimetablePage:
             elif selected_function == self.lang_texts["function_one_hour"]:
                 departures = timetable.show_one_hour_ahead(station_id)
 
-            # Visa avgångar i en tabell
             st.subheader(f"{self.lang_texts['table_subheader']} {selected_stop}")
             if departures:
                 st.table(departures)

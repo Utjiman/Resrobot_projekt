@@ -5,6 +5,18 @@ from backend.stop_module import Stops
 
 
 class DataPage:
+    """
+    A Streamlit page for displaying public transport data.
+
+    This class provides a user interface for searching transport stops
+    and visualizing arrival and departure data in a graph.
+
+    Features:
+    - Search for transport stops by name.
+    - Select a stop from search results.
+    - Display a graph of arrivals and departures.
+    """
+
     def __init__(self, lang_texts, resrobot):
         self.lang_texts = lang_texts
         self.resrobot = resrobot

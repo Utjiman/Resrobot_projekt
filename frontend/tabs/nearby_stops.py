@@ -6,13 +6,26 @@ from frontend.plot_maps import create_map_with_stops, get_nearby_stops
 
 
 class NearbyStopsPage:
+    """
+    A Streamlit page for displaying nearby transport stops on a map.
+
+    This class provides a user interface for searching transport stops
+    and visualizing nearby stops within a selected radius.
+
+    Features:
+    - Search for transport stops by name.
+    - Select a stop from search results.
+    - Adjust the search radius using a slider.
+    - Display nearby stops on an interactive map.
+    """
+
     def __init__(self, lang_texts, resrobot):
         self.lang_texts = lang_texts
         self.resrobot = resrobot
         self.stops = Stops(self.resrobot)
 
     def display_nearby_stops(self):
-        """Sidan för närliggande hållplatser med kartvy."""
+
         st.markdown(f"# {self.lang_texts['nearby_header']}")
         st.markdown(self.lang_texts["nearby_description"])
 
