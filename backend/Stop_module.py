@@ -71,6 +71,3 @@ class Stops:
             }
             for stop in data.get("stopLocationOrCoordLocation")
         ]
-
-
-#
