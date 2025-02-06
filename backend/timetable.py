@@ -87,7 +87,7 @@ class TimeTable:
             )
 
             time_remaining = int((departure_time - now).total_seconds() // 60)
-            if time_remaining >= 0:
+            if 0 <= time_remaining <= 60:
                 result.append(
                     {
                         "Linje": line,
